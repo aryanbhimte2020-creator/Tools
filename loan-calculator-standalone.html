@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loan Calculator - Multi-Tools Hub</title>
+    <meta name="description" content="Free online loan calculator. Calculate monthly payments, interest, and amortization schedules for loans.">
+    <meta name="keywords" content="loan calculator, mortgage calculator, payment calculator, amortization, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .calculator-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .results-section {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .result-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        
+        .result-label {
+            font-size: 14px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .amortization-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .amortization-table .table {
+            margin-bottom: 0;
+        }
+        
+        .amortization-table .table th {
+            background: #f8f9fa;
+            border-bottom: 2px solid #dee2e6;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .amortization-table .table td {
+            font-size: 14px;
+            vertical-align: middle;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .pie-chart {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            position: relative;
+            background: conic-gradient(
+                #007bff 0deg 120deg,
+                #28a745 120deg 360deg
+            );
+        }
+        
+        .pie-chart::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+        }
+        
+        .chart-legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+        }
+        
+        .loan-type-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .loan-type {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .loan-type:hover {
+            border-color: #007bff;
+        }
+        
+        .loan-type.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .history-item .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .history-item .meta {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .payment-breakdown {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f3f4;
+        }
+        
+        .breakdown-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Loan Calculator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-calculator me-2"></i>Loan Calculator</h2>
+                            <p class="text-muted mb-0">Calculate loan payments, interest, and amortization schedules</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Calculator Form -->
+                            <div class="calculator-form">
+                                <h5>Loan Information</h5>
+                                
+                                <!-- Loan Type Selector -->
+                                <div class="loan-type-selector">
+                                    <div class="loan-type selected" data-type="fixed">Fixed Rate Loan</div>
+                                    <div class="loan-type" data-type="arm">Adjustable Rate Loan</div>
+                                    <div class="loan-type" data-type="interest-only">Interest Only</div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="loanAmount" class="form-label">Loan Amount ($)</label>
+                                        <input type="number" class="form-control" id="loanAmount" value="200000" min="1000" step="1000">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="interestRate" class="form-label">Annual Interest Rate (%)</label>
+                                        <input type="number" class="form-control" id="interestRate" value="4.5" min="0.1" max="50" step="0.1">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="loanTerm" class="form-label">Loan Term (Years)</label>
+                                        <select class="form-select" id="loanTerm">
+                                            <option value="5">5 Years</option>
+                                            <option value="10">10 Years</option>
+                                            <option value="15">15 Years</option>
+                                            <option value="20">20 Years</option>
+                                            <option value="25">25 Years</option>
+                                            <option value="30" selected>30 Years</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="downPayment" class="form-label">Down Payment ($)</label>
+                                        <input type="number" class="form-control" id="downPayment" value="40000" min="0" step="1000">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="propertyTax" class="form-label">Annual Property Tax ($)</label>
+                                        <input type="number" class="form-control" id="propertyTax" value="2400" min="0" step="100">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="insurance" class="form-label">Annual Insurance ($)</label>
+                                        <input type="number" class="form-control" id="insurance" value="1200" min="0" step="100">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="pmi" class="form-label">PMI Rate (%)</label>
+                                        <input type="number" class="form-control" id="pmi" value="0.5" min="0" max="5" step="0.1">
+                                        <div class="form-text">Private Mortgage Insurance (if down payment < 20%)</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="startDate" class="form-label">Loan Start Date</label>
+                                        <input type="date" class="form-control" id="startDate">
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="calculateLoan()">
+                                        <i class="fas fa-calculator me-2"></i>Calculate Loan
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="clearForm()">
+                                        <i class="fas fa-eraser me-2"></i>Clear Form
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Results Section -->
+                            <div class="results-section" id="resultsSection" style="display: none;">
+                                <h5>Loan Summary</h5>
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="result-card text-center">
+                                            <div class="result-value" id="monthlyPayment">$0</div>
+                                            <div class="result-label">Monthly Payment</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="result-card text-center">
+                                            <div class="result-value" id="totalPayment">$0</div>
+                                            <div class="result-label">Total Payment</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="result-card text-center">
+                                            <div class="result-value" id="totalInterest">$0</div>
+                                            <div class="result-label">Total Interest</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="result-card text-center">
+                                            <div class="result-value" id="apr">0%</div>
+                                            <div class="result-label">APR</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Payment Breakdown -->
+                                <div class="payment-breakdown">
+                                    <h6>Payment Breakdown</h6>
+                                    <div class="breakdown-item">
+                                        <span>Principal & Interest</span>
+                                        <span id="principalInterest">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span>Property Tax</span>
+                                        <span id="monthlyTax">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span>Insurance</span>
+                                        <span id="monthlyInsurance">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span>PMI</span>
+                                        <span id="monthlyPmi">$0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span>Total Monthly Payment</span>
+                                        <span id="totalMonthlyPayment">$0</span>
+                                    </div>
+                                </div>
+                                
+                                <!-- Chart -->
+                                <div class="chart-container">
+                                    <h6>Payment Distribution</h6>
+                                    <div class="pie-chart" id="pieChart"></div>
+                                    <div class="chart-legend" id="chartLegend">
+                                        <!-- Legend will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Amortization Schedule -->
+                            <div class="mb-4" id="amortizationSection" style="display: none;">
+                                <h5>Amortization Schedule</h5>
+                                <div class="amortization-table">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Payment #</th>
+                                                    <th>Payment Date</th>
+                                                    <th>Payment</th>
+                                                    <th>Principal</th>
+                                                    <th>Interest</th>
+                                                    <th>Remaining Balance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="amortizationTable">
+                                                <!-- Amortization data will be populated here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- History -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Calculation History</h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                        <i class="fas fa-trash me-1"></i>Clear History
+                                    </button>
+                                </div>
+                                <div id="historyContainer">
+                                    <!-- History items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLoanCalculator();
+        });
+
+        function initializeLoanCalculator() {
+            // Load history
+            loadHistory();
+            
+            // Set default start date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('startDate').value = today;
+            
+            // Loan type selector
+            document.querySelectorAll('.loan-type').forEach(type => {
+                type.addEventListener('click', function() {
+                    document.querySelectorAll('.loan-type').forEach(t => t.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Auto-calculate on input changes
+            const inputs = ['loanAmount', 'interestRate', 'loanTerm', 'downPayment', 'propertyTax', 'insurance', 'pmi'];
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', calculateLoan);
+            });
+        }
+
+        function calculateLoan() {
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const loanTerm = parseInt(document.getElementById('loanTerm').value) || 30;
+            const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
+            const propertyTax = parseFloat(document.getElementById('propertyTax').value) || 0;
+            const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+            const pmiRate = parseFloat(document.getElementById('pmi').value) || 0;
+            const startDate = document.getElementById('startDate').value;
+            
+            if (loanAmount <= 0 || interestRate <= 0) {
+                return;
+            }
+
+            const principal = loanAmount - downPayment;
+            const monthlyRate = interestRate / 100 / 12;
+            const totalPayments = loanTerm * 12;
+            
+            // Calculate monthly payment
+            let monthlyPayment = 0;
+            if (monthlyRate > 0) {
+                monthlyPayment = principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1);
+            } else {
+                monthlyPayment = principal / totalPayments;
+            }
+            
+            // Calculate additional costs
+            const monthlyTax = propertyTax / 12;
+            const monthlyInsurance = insurance / 12;
+            const monthlyPmi = (downPayment < loanAmount * 0.2) ? (principal * pmiRate / 100 / 12) : 0;
+            
+            const totalMonthlyPayment = monthlyPayment + monthlyTax + monthlyInsurance + monthlyPmi;
+            const totalPayment = totalMonthlyPayment * totalPayments;
+            const totalInterest = totalPayment - principal;
+            
+            // Calculate APR (simplified)
+            const apr = interestRate; // Simplified calculation
+            
+            // Display results
+            document.getElementById('monthlyPayment').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('totalPayment').textContent = formatCurrency(totalPayment);
+            document.getElementById('totalInterest').textContent = formatCurrency(totalInterest);
+            document.getElementById('apr').textContent = apr.toFixed(2) + '%';
+            
+            document.getElementById('principalInterest').textContent = formatCurrency(monthlyPayment);
+            document.getElementById('monthlyTax').textContent = formatCurrency(monthlyTax);
+            document.getElementById('monthlyInsurance').textContent = formatCurrency(monthlyInsurance);
+            document.getElementById('monthlyPmi').textContent = formatCurrency(monthlyPmi);
+            document.getElementById('totalMonthlyPayment').textContent = formatCurrency(totalMonthlyPayment);
+            
+            // Update chart
+            updateChart(monthlyPayment, monthlyTax, monthlyInsurance, monthlyPmi);
+            
+            // Generate amortization schedule
+            generateAmortizationSchedule(principal, monthlyRate, totalPayments, startDate);
+            
+            // Show results
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('amortizationSection').style.display = 'block';
+            
+            // Save to history
+            saveToHistory(loanAmount, interestRate, loanTerm, totalMonthlyPayment);
+        }
+
+        function updateChart(principalInterest, tax, insurance, pmi) {
+            const total = principalInterest + tax + insurance + pmi;
+            const principalInterestPercent = (principalInterest / total) * 100;
+            const taxPercent = (tax / total) * 100;
+            const insurancePercent = (insurance / total) * 100;
+            const pmiPercent = (pmi / total) * 100;
+            
+            const pieChart = document.getElementById('pieChart');
+            pieChart.style.background = `conic-gradient(
+                #007bff 0deg ${principalInterestPercent * 3.6}deg,
+                #28a745 ${principalInterestPercent * 3.6}deg ${(principalInterestPercent + taxPercent) * 3.6}deg,
+                #ffc107 ${(principalInterestPercent + taxPercent) * 3.6}deg ${(principalInterestPercent + taxPercent + insurancePercent) * 3.6}deg,
+                #dc3545 ${(principalInterestPercent + taxPercent + insurancePercent) * 3.6}deg 360deg
+            )`;
+            
+            const legend = document.getElementById('chartLegend');
+            legend.innerHTML = `
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #007bff;"></div>
+                    <span>Principal & Interest (${principalInterestPercent.toFixed(1)}%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #28a745;"></div>
+                    <span>Property Tax (${taxPercent.toFixed(1)}%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #ffc107;"></div>
+                    <span>Insurance (${insurancePercent.toFixed(1)}%)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #dc3545;"></div>
+                    <span>PMI (${pmiPercent.toFixed(1)}%)</span>
+                </div>
+            `;
+        }
+
+        function generateAmortizationSchedule(principal, monthlyRate, totalPayments, startDate) {
+            const table = document.getElementById('amortizationTable');
+            let balance = principal;
+            let html = '';
+            
+            for (let i = 1; i <= Math.min(totalPayments, 12); i++) { // Show first 12 payments
+                const interest = balance * monthlyRate;
+                const principalPayment = (monthlyRate > 0) ? 
+                    (principal * (monthlyRate * Math.pow(1 + monthlyRate, totalPayments)) / (Math.pow(1 + monthlyRate, totalPayments) - 1)) - interest :
+                    principal / totalPayments;
+                balance -= principalPayment;
+                
+                const paymentDate = new Date(startDate);
+                paymentDate.setMonth(paymentDate.getMonth() + i);
+                
+                html += `
+                    <tr>
+                        <td>${i}</td>
+                        <td>${paymentDate.toLocaleDateString()}</td>
+                        <td>${formatCurrency(principalPayment + interest)}</td>
+                        <td>${formatCurrency(principalPayment)}</td>
+                        <td>${formatCurrency(interest)}</td>
+                        <td>${formatCurrency(Math.max(0, balance))}</td>
+                    </tr>
+                `;
+            }
+            
+            if (totalPayments > 12) {
+                html += `
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">
+                            ... and ${totalPayments - 12} more payments
+                        </td>
+                    </tr>
+                `;
+            }
+            
+            table.innerHTML = html;
+        }
+
+        function clearForm() {
+            document.getElementById('loanAmount').value = '200000';
+            document.getElementById('interestRate').value = '4.5';
+            document.getElementById('loanTerm').value = '30';
+            document.getElementById('downPayment').value = '40000';
+            document.getElementById('propertyTax').value = '2400';
+            document.getElementById('insurance').value = '1200';
+            document.getElementById('pmi').value = '0.5';
+            
+            document.getElementById('resultsSection').style.display = 'none';
+            document.getElementById('amortizationSection').style.display = 'none';
+            
+            showNotification('Form cleared successfully', 'success');
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        function saveToHistory(loanAmount, interestRate, loanTerm, monthlyPayment) {
+            const history = JSON.parse(localStorage.getItem('loanHistory') || '[]');
+            const historyItem = {
+                loanAmount: loanAmount,
+                interestRate: interestRate,
+                loanTerm: loanTerm,
+                monthlyPayment: monthlyPayment,
+                timestamp: new Date().toISOString()
+            };
+
+            // Add to beginning of array
+            history.unshift(historyItem);
+
+            // Keep only last 10 items
+            if (history.length > 10) {
+                history.pop();
+            }
+
+            localStorage.setItem('loanHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function loadHistory() {
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('loanHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No calculation history yet. Calculate some loans to see it here.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item" onclick="loadFromHistory(${index})">
+                    <div class="title">$${item.loanAmount.toLocaleString()} at ${item.interestRate}% for ${item.loanTerm} years</div>
+                    <div class="meta">
+                        Monthly Payment: ${formatCurrency(item.monthlyPayment)}<br>
+                        ${formatDate(item.timestamp)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const history = JSON.parse(localStorage.getItem('loanHistory') || '[]');
+            if (history[index]) {
+                const item = history[index];
+                document.getElementById('loanAmount').value = item.loanAmount;
+                document.getElementById('interestRate').value = item.interestRate;
+                document.getElementById('loanTerm').value = item.loanTerm;
+                calculateLoan();
+                showNotification('Loaded from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('loanHistory');
+            updateHistoryDisplay();
+            showNotification('History cleared!', 'success');
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Diff Checker - Multi-Tools Hub</title>
+    <meta name="description" content="Free online text diff checker. Compare two texts and highlight differences with line-by-line analysis.">
+    <meta name="keywords" content="text diff, diff checker, text comparison, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .diff-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .text-input {
+            min-height: 200px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .diff-view {
+            background: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 300px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .diff-line {
+            padding: 2px 8px;
+            margin: 1px 0;
+            border-radius: 3px;
+        }
+        
+        .diff-added {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .diff-removed {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+            text-decoration: line-through;
+        }
+        
+        .diff-unchanged {
+            background-color: #f8f9fa;
+            color: #6c757d;
+        }
+        
+        .diff-line-number {
+            display: inline-block;
+            width: 40px;
+            color: #adb5bd;
+            font-size: 12px;
+            text-align: right;
+            margin-right: 10px;
+        }
+        
+        .diff-stats {
+            background: #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        
+        .stat-number {
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .stat-added {
+            color: #28a745;
+        }
+        
+        .stat-removed {
+            color: #dc3545;
+        }
+        
+        .stat-unchanged {
+            color: #6c757d;
+        }
+        
+        .comparison-options {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .file-upload-area {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .history-item .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .history-item .meta {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Text Diff Checker</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-code-branch me-2"></i>Text Diff Checker</h2>
+                            <p class="text-muted mb-0">Compare two texts and highlight differences</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Comparison Options -->
+                            <div class="comparison-options">
+                                <h5>Comparison Options</h5>
+                                <div class="option-group">
+                                    <div class="option-item">
+                                        <input type="checkbox" id="ignoreCase" class="form-check-input">
+                                        <label for="ignoreCase" class="form-check-label">Ignore Case</label>
+                                    </div>
+                                    <div class="option-item">
+                                        <input type="checkbox" id="ignoreWhitespace" class="form-check-input">
+                                        <label for="ignoreWhitespace" class="form-check-label">Ignore Whitespace</label>
+                                    </div>
+                                    <div class="option-item">
+                                        <input type="checkbox" id="ignoreLineEndings" class="form-check-input">
+                                        <label for="ignoreLineEndings" class="form-check-label">Ignore Line Endings</label>
+                                    </div>
+                                    <div class="option-item">
+                                        <input type="checkbox" id="showLineNumbers" class="form-check-input" checked>
+                                        <label for="showLineNumbers" class="form-check-label">Show Line Numbers</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File Upload -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="file-upload-area" id="fileUpload1">
+                                        <i class="fas fa-file-upload fa-2x text-muted mb-2"></i>
+                                        <p class="text-muted mb-1">Drop file here or click to upload</p>
+                                        <input type="file" id="fileInput1" style="display: none;" accept=".txt,.md,.js,.html,.css,.py,.java,.cpp,.c,.php,.json,.xml">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('fileInput1').click()">Choose File</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="file-upload-area" id="fileUpload2">
+                                        <i class="fas fa-file-upload fa-2x text-muted mb-2"></i>
+                                        <p class="text-muted mb-1">Drop file here or click to upload</p>
+                                        <input type="file" id="fileInput2" style="display: none;" accept=".txt,.md,.js,.html,.css,.py,.java,.cpp,.c,.php,.json,.xml">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="document.getElementById('fileInput2').click()">Choose File</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Text Inputs -->
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="text1" class="form-label">Original Text</label>
+                                    <textarea class="form-control text-input" id="text1" placeholder="Enter or paste the original text here..."></textarea>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="text2" class="form-label">Modified Text</label>
+                                    <textarea class="form-control text-input" id="text2" placeholder="Enter or paste the modified text here..."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex gap-2 mb-3">
+                                <button class="btn btn-primary" onclick="compareTexts()">
+                                    <i class="fas fa-search me-2"></i>Compare Texts
+                                </button>
+                                <button class="btn btn-secondary" onclick="clearAll()">
+                                    <i class="fas fa-eraser me-2"></i>Clear All
+                                </button>
+                                <button class="btn btn-outline-success" onclick="exportDiff()">
+                                    <i class="fas fa-download me-2"></i>Export Diff
+                                </button>
+                            </div>
+
+                            <!-- Diff Statistics -->
+                            <div class="diff-stats" id="diffStats" style="display: none;">
+                                <div class="stat-item">
+                                    <span class="stat-number stat-added" id="addedLines">0</span> lines added
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number stat-removed" id="removedLines">0</span> lines removed
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number stat-unchanged" id="unchangedLines">0</span> lines unchanged
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="similarity">0</span>% similarity
+                                </div>
+                            </div>
+
+                            <!-- Diff Output -->
+                            <div class="mb-4" id="diffOutput" style="display: none;">
+                                <label class="form-label">Difference Analysis</label>
+                                <div class="diff-view" id="diffView">
+                                    <!-- Diff content will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- History -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Comparison History</h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                        <i class="fas fa-trash me-1"></i>Clear History
+                                    </button>
+                                </div>
+                                <div id="historyContainer">
+                                    <!-- History items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDiffChecker();
+        });
+
+        function initializeDiffChecker() {
+            // Load history
+            loadHistory();
+            
+            // Add event listeners
+            document.getElementById('text1').addEventListener('input', autoCompare);
+            document.getElementById('text2').addEventListener('input', autoCompare);
+            
+            // File upload handlers
+            setupFileUpload('fileInput1', 'text1', 'fileUpload1');
+            setupFileUpload('fileInput2', 'text2', 'fileUpload2');
+            
+            // Drag and drop handlers
+            setupDragAndDrop('fileUpload1', 'text1');
+            setupDragAndDrop('fileUpload2', 'text2');
+        }
+
+        function setupFileUpload(fileInputId, textAreaId, uploadAreaId) {
+            const fileInput = document.getElementById(fileInputId);
+            const textArea = document.getElementById(textAreaId);
+            const uploadArea = document.getElementById(uploadAreaId);
+
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    readFile(file, textArea);
+                }
+            });
+        }
+
+        function setupDragAndDrop(uploadAreaId, textAreaId) {
+            const uploadArea = document.getElementById(uploadAreaId);
+            const textArea = document.getElementById(textAreaId);
+
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+
+            uploadArea.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    readFile(files[0], textArea);
+                }
+            });
+        }
+
+        function readFile(file, textArea) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                textArea.value = e.target.result;
+                autoCompare();
+            };
+            reader.readAsText(file);
+        }
+
+        function autoCompare() {
+            const text1 = document.getElementById('text1').value;
+            const text2 = document.getElementById('text2').value;
+            
+            if (text1.trim() && text2.trim()) {
+                compareTexts();
+            }
+        }
+
+        function compareTexts() {
+            const text1 = document.getElementById('text1').value;
+            const text2 = document.getElementById('text2').value;
+            
+            if (!text1.trim() && !text2.trim()) {
+                showNotification('Please enter some text to compare', 'error');
+                return;
+            }
+
+            const ignoreCase = document.getElementById('ignoreCase').checked;
+            const ignoreWhitespace = document.getElementById('ignoreWhitespace').checked;
+            const ignoreLineEndings = document.getElementById('ignoreLineEndings').checked;
+            const showLineNumbers = document.getElementById('showLineNumbers').checked;
+
+            // Process texts based on options
+            let processedText1 = text1;
+            let processedText2 = text2;
+
+            if (ignoreCase) {
+                processedText1 = processedText1.toLowerCase();
+                processedText2 = processedText2.toLowerCase();
+            }
+
+            if (ignoreWhitespace) {
+                processedText1 = processedText1.replace(/\s+/g, ' ').trim();
+                processedText2 = processedText2.replace(/\s+/g, ' ').trim();
+            }
+
+            if (ignoreLineEndings) {
+                processedText1 = processedText1.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                processedText2 = processedText2.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+            }
+
+            // Split into lines
+            const lines1 = processedText1.split('\n');
+            const lines2 = processedText2.split('\n');
+
+            // Generate diff
+            const diff = generateDiff(lines1, lines2, showLineNumbers);
+            
+            // Display results
+            displayDiff(diff);
+            
+            // Calculate statistics
+            calculateStats(lines1, lines2, diff);
+            
+            // Save to history
+            saveToHistory(text1, text2, diff);
+        }
+
+        function generateDiff(lines1, lines2, showLineNumbers) {
+            const diff = [];
+            const maxLines = Math.max(lines1.length, lines2.length);
+            
+            for (let i = 0; i < maxLines; i++) {
+                const line1 = lines1[i] || '';
+                const line2 = lines2[i] || '';
+                const lineNumber = showLineNumbers ? (i + 1) : '';
+                
+                if (line1 === line2) {
+                    diff.push({
+                        type: 'unchanged',
+                        line1: line1,
+                        line2: line2,
+                        number: lineNumber
+                    });
+                } else {
+                    diff.push({
+                        type: 'removed',
+                        line1: line1,
+                        line2: '',
+                        number: lineNumber
+                    });
+                    diff.push({
+                        type: 'added',
+                        line1: '',
+                        line2: line2,
+                        number: lineNumber
+                    });
+                }
+            }
+            
+            return diff;
+        }
+
+        function displayDiff(diff) {
+            const diffView = document.getElementById('diffView');
+            let html = '';
+            
+            diff.forEach(item => {
+                const lineNumber = item.number ? `<span class="diff-line-number">${item.number}</span>` : '';
+                const content = item.type === 'removed' ? item.line1 : item.line2;
+                
+                html += `<div class="diff-line diff-${item.type}">${lineNumber}${content}</div>`;
+            });
+            
+            diffView.innerHTML = html;
+            document.getElementById('diffOutput').style.display = 'block';
+        }
+
+        function calculateStats(lines1, lines2, diff) {
+            const added = diff.filter(item => item.type === 'added').length;
+            const removed = diff.filter(item => item.type === 'removed').length;
+            const unchanged = diff.filter(item => item.type === 'unchanged').length;
+            
+            const totalLines = Math.max(lines1.length, lines2.length);
+            const similarity = totalLines > 0 ? Math.round(((unchanged / totalLines) * 100)) : 0;
+            
+            document.getElementById('addedLines').textContent = added;
+            document.getElementById('removedLines').textContent = removed;
+            document.getElementById('unchangedLines').textContent = unchanged;
+            document.getElementById('similarity').textContent = similarity;
+            
+            document.getElementById('diffStats').style.display = 'block';
+        }
+
+        function clearAll() {
+            document.getElementById('text1').value = '';
+            document.getElementById('text2').value = '';
+            document.getElementById('diffOutput').style.display = 'none';
+            document.getElementById('diffStats').style.display = 'none';
+            document.getElementById('fileInput1').value = '';
+            document.getElementById('fileInput2').value = '';
+            
+            showNotification('All content cleared', 'success');
+        }
+
+        function exportDiff() {
+            const diffView = document.getElementById('diffView');
+            if (!diffView.innerHTML.trim()) {
+                showNotification('No diff to export', 'error');
+                return;
+            }
+
+            const diffText = diffView.textContent;
+            const blob = new Blob([diffText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'diff_result.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Diff exported successfully!', 'success');
+        }
+
+        function saveToHistory(text1, text2, diff) {
+            const history = JSON.parse(localStorage.getItem('diffHistory') || '[]');
+            const historyItem = {
+                text1: text1.substring(0, 100) + (text1.length > 100 ? '...' : ''),
+                text2: text2.substring(0, 100) + (text2.length > 100 ? '...' : ''),
+                fullText1: text1,
+                fullText2: text2,
+                diff: diff,
+                timestamp: new Date().toISOString()
+            };
+
+            // Add to beginning of array
+            history.unshift(historyItem);
+
+            // Keep only last 10 items
+            if (history.length > 10) {
+                history.pop();
+            }
+
+            localStorage.setItem('diffHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function loadHistory() {
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('diffHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No comparison history yet. Compare some texts to see it here.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item" onclick="loadFromHistory(${index})">
+                    <div class="title">Text Comparison</div>
+                    <div class="meta">
+                        Original: "${item.text1}" | Modified: "${item.text2}"<br>
+                        ${formatDate(item.timestamp)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const history = JSON.parse(localStorage.getItem('diffHistory') || '[]');
+            if (history[index]) {
+                const item = history[index];
+                document.getElementById('text1').value = item.fullText1;
+                document.getElementById('text2').value = item.fullText2;
+                displayDiff(item.diff);
+                calculateStats(item.fullText1.split('\n'), item.fullText2.split('\n'), item.diff);
+                showNotification('Loaded from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('diffHistory');
+            updateHistoryDisplay();
+            showNotification('History cleared!', 'success');
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Tools Hub - 100+ Free Online Tools</title>
+    <meta name="description" content="Free online tools including image converters, calculators, SEO tools, text utilities, unit converters, developer tools, and more. 100+ tools in one place.">
+    <meta name="keywords" content="online tools, free tools, image converter, calculator, SEO tools, text tools, developer tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Section -->
+    <section class="hero-section bg-primary text-white py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">100+ Free Online Tools</h1>
+                    <p class="lead mb-4">Everything you need in one place - Image tools, calculators, SEO tools, text utilities, and more!</p>
+                    <div class="search-container">
+                        <div class="input-group mb-3">
+                            <input type="text" id="searchInput" class="form-control form-control-lg" placeholder="Search for tools...">
+                            <button class="btn btn-light" type="button">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center">
+                    <i class="fas fa-tools display-1"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Tools Categories -->
+    <section class="tools-section py-5">
+        <div class="container">
+            <!-- Image Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-image text-primary"></i>
+                    Image Tools
+                </h2>
+                <div class="row tools-grid" data-category="image">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="image-to-png">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-image text-primary mb-3"></i>
+                                    <h5 class="card-title">Image to PNG</h5>
+                                    <p class="card-text">Convert images to PNG format</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="image-to-jpg">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-image text-warning mb-3"></i>
+                                    <h5 class="card-title">Image to JPG</h5>
+                                    <p class="card-text">Convert images to JPG format</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="image-resizer">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-expand-arrows-alt text-success mb-3"></i>
+                                    <h5 class="card-title">Image Resizer</h5>
+                                    <p class="card-text">Resize images to any dimension</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="image-compressor">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-compress-alt text-info mb-3"></i>
+                                    <h5 class="card-title">Image Compressor</h5>
+                                    <p class="card-text">Compress images without losing quality</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-search text-success"></i>
+                    SEO Tools
+                </h2>
+                <div class="row tools-grid" data-category="seo">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="meta-tag-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tags text-primary mb-3"></i>
+                                    <h5 class="card-title">Meta Tag Generator</h5>
+                                    <p class="card-text">Generate SEO meta tags</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="keyword-density-checker">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-bar text-warning mb-3"></i>
+                                    <h5 class="card-title">Keyword Density Checker</h5>
+                                    <p class="card-text">Check keyword density in text</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="sitemap-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-sitemap text-success mb-3"></i>
+                                    <h5 class="card-title">Sitemap Generator</h5>
+                                    <p class="card-text">Generate XML sitemaps</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="robots-txt-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-robot text-info mb-3"></i>
+                                    <h5 class="card-title">Robots.txt Generator</h5>
+                                    <p class="card-text">Generate robots.txt files</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Text Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-font text-warning"></i>
+                    Text Tools
+                </h2>
+                <div class="row tools-grid" data-category="text">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="word-counter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-calculator text-primary mb-3"></i>
+                                    <h5 class="card-title">Word Counter</h5>
+                                    <p class="card-text">Count words and characters</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="case-converter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-text-height text-success mb-3"></i>
+                                    <h5 class="card-title">Case Converter</h5>
+                                    <p class="card-text">Convert text case formats</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="url-encoder">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-link text-warning mb-3"></i>
+                                    <h5 class="card-title">URL Encoder</h5>
+                                    <p class="card-text">Encode and decode URLs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="fancy-text-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-magic text-info mb-3"></i>
+                                    <h5 class="card-title">Fancy Text Generator</h5>
+                                    <p class="card-text">Generate fancy text styles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Developer Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-code text-danger"></i>
+                    Developer Tools
+                </h2>
+                <div class="row tools-grid" data-category="developer">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="json-formatter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-brackets-curly text-primary mb-3"></i>
+                                    <h5 class="card-title">JSON Formatter</h5>
+                                    <p class="card-text">Format and validate JSON</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="html-to-markdown">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-exchange-alt text-success mb-3"></i>
+                                    <h5 class="card-title">HTML to Markdown</h5>
+                                    <p class="card-text">Convert HTML to Markdown</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="css-minifier">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-compress text-warning mb-3"></i>
+                                    <h5 class="card-title">CSS Minifier</h5>
+                                    <p class="card-text">Minify CSS code</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="color-picker">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-palette text-info mb-3"></i>
+                                    <h5 class="card-title">Color Picker</h5>
+                                    <p class="card-text">Pick and convert colors</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calculators -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-calculator text-success"></i>
+                    Calculators
+                </h2>
+                <div class="row tools-grid" data-category="calculator">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="percentage-calculator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-percentage text-primary mb-3"></i>
+                                    <h5 class="card-title">Percentage Calculator</h5>
+                                    <p class="card-text">Calculate percentages</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="age-calculator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-birthday-cake text-warning mb-3"></i>
+                                    <h5 class="card-title">Age Calculator</h5>
+                                    <p class="card-text">Calculate exact age</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="bmi-calculator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-weight text-success mb-3"></i>
+                                    <h5 class="card-title">BMI Calculator</h5>
+                                    <p class="card-text">Calculate Body Mass Index</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="loan-emi-calculator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-money-bill-wave text-info mb-3"></i>
+                                    <h5 class="card-title">Loan EMI Calculator</h5>
+                                    <p class="card-text">Calculate loan EMIs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unit Converters -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-ruler text-danger"></i>
+                    Unit Converters
+                </h2>
+                <div class="row tools-grid" data-category="converter">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="length-converter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-ruler-horizontal text-primary mb-3"></i>
+                                    <h5 class="card-title">Length Converter</h5>
+                                    <p class="card-text">Convert length units</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="weight-converter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-balance-scale text-warning mb-3"></i>
+                                    <h5 class="card-title">Weight Converter</h5>
+                                    <p class="card-text">Convert weight units</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="temperature-converter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-thermometer-half text-success mb-3"></i>
+                                    <h5 class="card-title">Temperature Converter</h5>
+                                    <p class="card-text">Convert temperature units</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="currency-converter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-dollar-sign text-info mb-3"></i>
+                                    <h5 class="card-title">Currency Converter</h5>
+                                    <p class="card-text">Convert currencies</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Security Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-shield-alt text-warning"></i>
+                    Security & Encryption
+                </h2>
+                <div class="row tools-grid" data-category="security">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="md5-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-hashtag text-primary mb-3"></i>
+                                    <h5 class="card-title">MD5 Generator</h5>
+                                    <p class="card-text">Generate MD5 hashes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="password-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-key text-success mb-3"></i>
+                                    <h5 class="card-title">Password Generator</h5>
+                                    <p class="card-text">Generate secure passwords</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="url-shortener">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-cut text-warning mb-3"></i>
+                                    <h5 class="card-title">URL Shortener</h5>
+                                    <p class="card-text">Shorten long URLs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="ip-lookup">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-map-marker-alt text-info mb-3"></i>
+                                    <h5 class="card-title">IP Lookup</h5>
+                                    <p class="card-text">Lookup IP information</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-share-alt text-primary"></i>
+                    Social Media Tools
+                </h2>
+                <div class="row tools-grid" data-category="social">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="youtube-thumbnail-downloader">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fab fa-youtube text-danger mb-3"></i>
+                                    <h5 class="card-title">YouTube Thumbnail Downloader</h5>
+                                    <p class="card-text">Download YouTube thumbnails</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="hashtag-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-hashtag text-primary mb-3"></i>
+                                    <h5 class="card-title">Hashtag Generator</h5>
+                                    <p class="card-text">Generate trending hashtags</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="twitter-character-counter">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fab fa-twitter text-info mb-3"></i>
+                                    <h5 class="card-title">Twitter Character Counter</h5>
+                                    <p class="card-text">Count Twitter characters</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="emoji-keyboard">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-smile text-warning mb-3"></i>
+                                    <h5 class="card-title">Emoji Keyboard</h5>
+                                    <p class="card-text">Copy and paste emojis</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miscellaneous Tools -->
+            <div class="category-section mb-5">
+                <h2 class="category-title">
+                    <i class="fas fa-tools text-secondary"></i>
+                    Miscellaneous Tools
+                </h2>
+                <div class="row tools-grid" data-category="misc">
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="qr-code-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-qrcode text-primary mb-3"></i>
+                                    <h5 class="card-title">QR Code Generator</h5>
+                                    <p class="card-text">Generate QR codes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="random-number-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-dice text-success mb-3"></i>
+                                    <h5 class="card-title">Random Number Generator</h5>
+                                    <p class="card-text">Generate random numbers</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="barcode-generator">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-barcode text-warning mb-3"></i>
+                                    <h5 class="card-title">Barcode Generator</h5>
+                                    <p class="card-text">Generate barcodes</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-lg-3 mb-4">
+                        <div class="tool-card" data-tool="internet-speed-test">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-tachometer-alt text-info mb-3"></i>
+                                    <h5 class="card-title">Internet Speed Test</h5>
+                                    <p class="card-text">Test your internet speed</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder/Decoder - Multi-Tools Hub</title>
+    <meta name="description" content="Free online URL encoder and decoder. Encode and decode URLs, base64, and other encoding formats.">
+    <meta name="keywords" content="url encoder, url decoder, base64, encoding, decoding, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .encoding-preview {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+            word-break: break-all;
+            min-height: 60px;
+        }
+        .encoding-button {
+            margin: 0.25rem;
+            min-width: 120px;
+        }
+        .encoding-stats {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">URL Encoder/Decoder</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="tool-title">
+                        <i class="fas fa-link text-primary"></i>
+                        URL Encoder/Decoder
+                    </h1>
+                    <p class="tool-description">Encode and decode URLs, base64, HTML entities, and other encoding formats. Perfect for web development and data processing.</p>
+                    
+                    <!-- Text Input -->
+                    <div class="mb-4">
+                        <label for="textInput" class="form-label">Enter your text:</label>
+                        <textarea id="textInput" class="form-control" rows="6" placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    
+                    <!-- Encoding Options -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-cog text-primary"></i> Encoding Options:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary encoding-button" onclick="encode('url')">
+                                    <i class="fas fa-arrow-up"></i> URL Encode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="decode('url')">
+                                    <i class="fas fa-arrow-down"></i> URL Decode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="encode('base64')">
+                                    <i class="fas fa-arrow-up"></i> Base64 Encode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="decode('base64')">
+                                    <i class="fas fa-arrow-down"></i> Base64 Decode
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary encoding-button" onclick="encode('html')">
+                                    <i class="fas fa-arrow-up"></i> HTML Encode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="decode('html')">
+                                    <i class="fas fa-arrow-down"></i> HTML Decode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="encode('unicode')">
+                                    <i class="fas fa-arrow-up"></i> Unicode Encode
+                                </button>
+                                <button class="btn btn-outline-primary encoding-button" onclick="decode('unicode')">
+                                    <i class="fas fa-arrow-down"></i> Unicode Decode
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary me-2" onclick="copyText()">
+                            <i class="fas fa-copy"></i> Copy Text
+                        </button>
+                        <button class="btn btn-success me-2" onclick="downloadText()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-danger me-2" onclick="clearText()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="btn btn-info" onclick="loadSample()">
+                            <i class="fas fa-lightbulb"></i> Load Sample
+                        </button>
+                    </div>
+                    
+                    <!-- Encoding Statistics -->
+                    <div class="encoding-stats" id="encodingStats" style="display: none;">
+                        <h5><i class="fas fa-chart-bar text-info"></i> Encoding Statistics</h5>
+                        <div id="statsContent"></div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Encoding Preview -->
+                    <div class="encoding-preview" id="encodingPreview">
+                        <strong>Preview:</strong><br>
+                        <span class="text-muted">Enter text to see preview...</span>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-bolt text-warning"></i> Quick Actions</h5>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="encodeAll()">
+                            <i class="fas fa-layer-group"></i> Encode All
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="decodeAll()">
+                            <i class="fas fa-layer-group"></i> Decode All
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="validateUrl()">
+                            <i class="fas fa-check-circle"></i> Validate URL
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="parseUrl()">
+                            <i class="fas fa-sitemap"></i> Parse URL
+                        </button>
+                    </div>
+                    
+                    <!-- Encoding Examples -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-info-circle text-info"></i> Encoding Examples</h5>
+                        <div class="small">
+                            <strong>URL:</strong> Hello World → Hello%20World<br>
+                            <strong>Base64:</strong> Hello → SGVsbG8=<br>
+                            <strong>HTML:</strong> & → &amp;<br>
+                            <strong>Unicode:</strong> Hello → \u0048\u0065\u006c\u006c\u006f
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-tools me-2"></i>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for 100+ free online tools. From image converters to calculators, we've got everything you need.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>support@multitoolshub.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Tools Street, Web City</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Standalone URL Encoder/Decoder
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const encodingPreview = document.getElementById('encodingPreview');
+            const encodingStats = document.getElementById('encodingStats');
+            const statsContent = document.getElementById('statsContent');
+
+            // Initialize
+            initializeUrlEncoderDecoder();
+
+            function initializeUrlEncoderDecoder() {
+                // Add event listeners
+                textInput.addEventListener('input', updatePreview);
+                textInput.addEventListener('input', updateStats);
+            }
+
+            function updatePreview() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    encodingPreview.innerHTML = '<strong>Preview:</strong><br><span class="text-muted">Enter text to see preview...</span>';
+                    return;
+                }
+
+                const preview = `
+                    <strong>Preview:</strong><br>
+                    <strong>Original:</strong> ${text}<br>
+                    <strong>URL Encoded:</strong> ${encodeURIComponent(text)}<br>
+                    <strong>Base64:</strong> ${btoa(text)}<br>
+                    <strong>HTML:</strong> ${escapeHtml(text)}
+                `;
+                encodingPreview.innerHTML = preview;
+            }
+
+            function updateStats() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    encodingStats.style.display = 'none';
+                    return;
+                }
+
+                const stats = {
+                    originalLength: text.length,
+                    urlEncodedLength: encodeURIComponent(text).length,
+                    base64Length: btoa(text).length,
+                    htmlEncodedLength: escapeHtml(text).length,
+                    compressionRatio: ((1 - encodeURIComponent(text).length / text.length) * 100).toFixed(1)
+                };
+
+                statsContent.innerHTML = `
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Original:</strong> ${stats.originalLength}<br>
+                            <strong>URL Encoded:</strong> ${stats.urlEncodedLength}<br>
+                            <strong>Base64:</strong> ${stats.base64Length}<br>
+                            <strong>HTML:</strong> ${stats.htmlEncodedLength}
+                        </div>
+                        <div class="col-6">
+                            <strong>Compression:</strong> ${stats.compressionRatio}%<br>
+                            <strong>Size Change:</strong> ${stats.urlEncodedLength > stats.originalLength ? '+' : ''}${stats.urlEncodedLength - stats.originalLength}<br>
+                            <strong>Base64 Ratio:</strong> ${((stats.base64Length / stats.originalLength) * 100).toFixed(1)}%<br>
+                            <strong>Special Chars:</strong> ${(text.match(/[^a-zA-Z0-9\s]/g) || []).length}
+                        </div>
+                    </div>
+                `;
+
+                encodingStats.style.display = 'block';
+            }
+
+            function encode(type) {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to encode.', 'warning');
+                    return;
+                }
+
+                let result = '';
+                try {
+                    switch (type) {
+                        case 'url':
+                            result = encodeURIComponent(text);
+                            break;
+                        case 'base64':
+                            result = btoa(text);
+                            break;
+                        case 'html':
+                            result = escapeHtml(text);
+                            break;
+                        case 'unicode':
+                            result = text.split('').map(char => '\\u' + ('0000' + char.charCodeAt(0).toString(16)).slice(-4)).join('');
+                            break;
+                    }
+                    textInput.value = result;
+                    updatePreview();
+                    updateStats();
+                    showNotification(`Text ${type} encoded successfully!`, 'success');
+                } catch (error) {
+                    showNotification(`Error encoding text: ${error.message}`, 'error');
+                }
+            }
+
+            function decode(type) {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to decode.', 'warning');
+                    return;
+                }
+
+                let result = '';
+                try {
+                    switch (type) {
+                        case 'url':
+                            result = decodeURIComponent(text);
+                            break;
+                        case 'base64':
+                            result = atob(text);
+                            break;
+                        case 'html':
+                            result = unescapeHtml(text);
+                            break;
+                        case 'unicode':
+                            result = text.replace(/\\u([0-9a-fA-F]{4})/g, (match, hex) => String.fromCharCode(parseInt(hex, 16)));
+                            break;
+                    }
+                    textInput.value = result;
+                    updatePreview();
+                    updateStats();
+                    showNotification(`Text ${type} decoded successfully!`, 'success');
+                } catch (error) {
+                    showNotification(`Error decoding text: ${error.message}`, 'error');
+                }
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function unescapeHtml(text) {
+                const div = document.createElement('div');
+                div.innerHTML = text;
+                return div.textContent;
+            }
+
+            function encodeAll() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to encode.', 'warning');
+                    return;
+                }
+
+                const result = btoa(encodeURIComponent(text));
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification('Text encoded with all methods!', 'success');
+            }
+
+            function decodeAll() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to decode.', 'warning');
+                    return;
+                }
+
+                try {
+                    const result = decodeURIComponent(atob(text));
+                    textInput.value = result;
+                    updatePreview();
+                    updateStats();
+                    showNotification('Text decoded with all methods!', 'success');
+                } catch (error) {
+                    showNotification('Error decoding text. Make sure it\'s properly encoded.', 'error');
+                }
+            }
+
+            function validateUrl() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('Please enter a URL to validate.', 'warning');
+                    return;
+                }
+
+                try {
+                    const url = new URL(text);
+                    showNotification(`Valid URL! Protocol: ${url.protocol}, Domain: ${url.hostname}`, 'success');
+                } catch (error) {
+                    showNotification('Invalid URL format.', 'error');
+                }
+            }
+
+            function parseUrl() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('Please enter a URL to parse.', 'warning');
+                    return;
+                }
+
+                try {
+                    const url = new URL(text);
+                    const parsed = `
+                        <strong>URL Parsed:</strong><br>
+                        <strong>Protocol:</strong> ${url.protocol}<br>
+                        <strong>Hostname:</strong> ${url.hostname}<br>
+                        <strong>Port:</strong> ${url.port || 'default'}<br>
+                        <strong>Pathname:</strong> ${url.pathname}<br>
+                        <strong>Search:</strong> ${url.search}<br>
+                        <strong>Hash:</strong> ${url.hash}
+                    `;
+                    encodingPreview.innerHTML = parsed;
+                    showNotification('URL parsed successfully!', 'success');
+                } catch (error) {
+                    showNotification('Error parsing URL. Make sure it\'s a valid URL.', 'error');
+                }
+            }
+
+            function copyText() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('No text to copy.', 'warning');
+                    return;
+                }
+
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Text copied to clipboard!', 'success');
+                }).catch(() => {
+                    showNotification('Failed to copy text.', 'error');
+                });
+            }
+
+            function downloadText() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('No text to download.', 'warning');
+                    return;
+                }
+
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'encoded-text.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('Text downloaded!', 'success');
+            }
+
+            function clearText() {
+                textInput.value = '';
+                updatePreview();
+                updateStats();
+                showNotification('Text cleared!', 'info');
+            }
+
+            function loadSample() {
+                const sampleText = "Hello World! This is a sample text with special characters: & < > \" ' and spaces.";
+                textInput.value = sampleText;
+                updatePreview();
+                updateStats();
+                showNotification('Sample text loaded!', 'info');
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                notification.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

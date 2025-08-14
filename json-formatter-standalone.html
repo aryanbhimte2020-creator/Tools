@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter - Multi-Tools Hub</title>
+    <meta name="description" content="Free online JSON formatter and validator. Format, validate, and beautify JSON data with syntax highlighting.">
+    <meta name="keywords" content="json formatter, json validator, json beautifier, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .json-editor {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            min-height: 300px;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            padding: 0.75rem;
+            background-color: #f8f9fa;
+        }
+        .json-editor:focus {
+            outline: none;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        .syntax-highlight {
+            color: #d63384;
+        }
+        .syntax-string { color: #198754; }
+        .syntax-number { color: #0d6efd; }
+        .syntax-boolean { color: #fd7e14; }
+        .syntax-null { color: #6c757d; }
+        .validation-result {
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .validation-success {
+            background-color: #d1e7dd;
+            border: 1px solid #badbcc;
+            color: #0f5132;
+        }
+        .validation-error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c2c7;
+            color: #842029;
+        }
+        .json-stats {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+        .sample-json-btn {
+            margin: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">JSON Formatter</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="tool-title">
+                        <i class="fas fa-brackets-curly text-success"></i>
+                        JSON Formatter
+                    </h1>
+                    <p class="tool-description">Format, validate, and beautify JSON data with syntax highlighting. Get detailed analysis of your JSON structure.</p>
+                    
+                    <!-- JSON Input -->
+                    <div class="mb-4">
+                        <label for="jsonInput" class="form-label">Enter your JSON:</label>
+                        <div id="jsonInput" class="json-editor" contenteditable="true" placeholder="Paste or type your JSON here..."></div>
+                    </div>
+                    
+                    <!-- Options -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="indentSize" class="form-label">Indent Size:</label>
+                            <select id="indentSize" class="form-select">
+                                <option value="2">2 spaces</option>
+                                <option value="4" selected>4 spaces</option>
+                                <option value="8">8 spaces</option>
+                                <option value="tab">Tab</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-check mt-4">
+                                <input class="form-check-input" type="checkbox" id="syntaxHighlight" checked>
+                                <label class="form-check-label" for="syntaxHighlight">
+                                    Enable syntax highlighting
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="mb-4">
+                        <button class="btn btn-success me-2" onclick="formatJson()">
+                            <i class="fas fa-magic"></i> Format
+                        </button>
+                        <button class="btn btn-warning me-2" onclick="minifyJson()">
+                            <i class="fas fa-compress-alt"></i> Minify
+                        </button>
+                        <button class="btn btn-primary me-2" onclick="validateJson()">
+                            <i class="fas fa-check-circle"></i> Validate
+                        </button>
+                        <button class="btn btn-danger me-2" onclick="clearJson()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="btn btn-info" onclick="copyJson()">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Validation Result -->
+                    <div id="validationResult" class="validation-result" style="display: none;"></div>
+                    
+                    <!-- JSON Statistics -->
+                    <div id="jsonStats" class="json-stats" style="display: none;">
+                        <h5><i class="fas fa-chart-bar text-primary"></i> JSON Statistics</h5>
+                        <div id="statsContent"></div>
+                    </div>
+                    
+                    <!-- Sample JSON -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-lightbulb text-warning"></i> Sample JSON</h5>
+                        <button class="btn btn-outline-primary btn-sm sample-json-btn" onclick="loadSample('simple')">Simple</button>
+                        <button class="btn btn-outline-primary btn-sm sample-json-btn" onclick="loadSample('complex')">Complex</button>
+                        <button class="btn btn-outline-primary btn-sm sample-json-btn" onclick="loadSample('array')">Array</button>
+                        <button class="btn btn-outline-primary btn-sm sample-json-btn" onclick="loadSample('nested')">Nested</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-tools me-2"></i>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for 100+ free online tools. From image converters to calculators, we've got everything you need.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>support@multitoolshub.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Tools Street, Web City</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Standalone JSON Formatter
+        document.addEventListener('DOMContentLoaded', function() {
+            const jsonInput = document.getElementById('jsonInput');
+            const validationResult = document.getElementById('validationResult');
+            const jsonStats = document.getElementById('jsonStats');
+            const statsContent = document.getElementById('statsContent');
+            const indentSize = document.getElementById('indentSize');
+            const syntaxHighlight = document.getElementById('syntaxHighlight');
+
+            // Initialize
+            initializeJsonFormatter();
+
+            function initializeJsonFormatter() {
+                // Add event listeners
+                jsonInput.addEventListener('input', function() {
+                    if (syntaxHighlight.checked) {
+                        applySyntaxHighlighting();
+                    }
+                });
+
+                jsonInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Tab') {
+                        e.preventDefault();
+                        document.execCommand('insertText', false, '    ');
+                    }
+                });
+
+                // Focus handling
+                jsonInput.addEventListener('focus', function() {
+                    if (this.textContent === '') {
+                        this.textContent = '';
+                    }
+                });
+            }
+
+            function validateJson() {
+                const jsonText = jsonInput.textContent.trim();
+                
+                if (!jsonText) {
+                    showValidationResult('Please enter some JSON to validate.', 'error');
+                    return;
+                }
+
+                try {
+                    const parsed = JSON.parse(jsonText);
+                    showValidationResult('✅ Valid JSON!', 'success');
+                    updateStatistics(parsed);
+                    if (syntaxHighlight.checked) {
+                        applySyntaxHighlighting();
+                    }
+                } catch (error) {
+                    showValidationResult(`❌ Invalid JSON: ${error.message}`, 'error');
+                    jsonStats.style.display = 'none';
+                }
+            }
+
+            function formatJson() {
+                const jsonText = jsonInput.textContent.trim();
+                
+                if (!jsonText) {
+                    showNotification('Please enter some JSON to format.', 'warning');
+                    return;
+                }
+
+                try {
+                    const parsed = JSON.parse(jsonText);
+                    const indent = indentSize.value === 'tab' ? '\t' : ' '.repeat(parseInt(indentSize.value));
+                    const formatted = JSON.stringify(parsed, null, indent);
+                    jsonInput.textContent = formatted;
+                    
+                    if (syntaxHighlight.checked) {
+                        applySyntaxHighlighting();
+                    }
+                    
+                    showValidationResult('✅ JSON formatted successfully!', 'success');
+                    updateStatistics(parsed);
+                    showNotification('JSON formatted successfully!', 'success');
+                } catch (error) {
+                    showValidationResult(`❌ Invalid JSON: ${error.message}`, 'error');
+                    showNotification('Invalid JSON. Please check your input.', 'error');
+                }
+            }
+
+            function minifyJson() {
+                const jsonText = jsonInput.textContent.trim();
+                
+                if (!jsonText) {
+                    showNotification('Please enter some JSON to minify.', 'warning');
+                    return;
+                }
+
+                try {
+                    const parsed = JSON.parse(jsonText);
+                    const minified = JSON.stringify(parsed);
+                    jsonInput.textContent = minified;
+                    
+                    if (syntaxHighlight.checked) {
+                        applySyntaxHighlighting();
+                    }
+                    
+                    showValidationResult('✅ JSON minified successfully!', 'success');
+                    updateStatistics(parsed);
+                    showNotification('JSON minified successfully!', 'success');
+                } catch (error) {
+                    showValidationResult(`❌ Invalid JSON: ${error.message}`, 'error');
+                    showNotification('Invalid JSON. Please check your input.', 'error');
+                }
+            }
+
+            function clearJson() {
+                jsonInput.textContent = '';
+                validationResult.style.display = 'none';
+                jsonStats.style.display = 'none';
+                showNotification('JSON cleared!', 'info');
+            }
+
+            function copyJson() {
+                const jsonText = jsonInput.textContent.trim();
+                
+                if (!jsonText) {
+                    showNotification('No JSON to copy.', 'warning');
+                    return;
+                }
+
+                navigator.clipboard.writeText(jsonText).then(() => {
+                    showNotification('JSON copied to clipboard!', 'success');
+                }).catch(() => {
+                    showNotification('Failed to copy JSON.', 'error');
+                });
+            }
+
+            function showValidationResult(message, type) {
+                validationResult.textContent = message;
+                validationResult.className = `validation-result validation-${type}`;
+                validationResult.style.display = 'block';
+            }
+
+            function updateStatistics(obj) {
+                const stats = analyzeJson(obj);
+                
+                statsContent.innerHTML = `
+                    <ul class="list-unstyled mb-0">
+                        <li><strong>Total Keys:</strong> ${stats.totalKeys}</li>
+                        <li><strong>Nested Objects:</strong> ${stats.nestedObjects}</li>
+                        <li><strong>Arrays:</strong> ${stats.arrays}</li>
+                        <li><strong>Max Depth:</strong> ${stats.maxDepth}</li>
+                        <li><strong>String Values:</strong> ${stats.stringValues}</li>
+                        <li><strong>Number Values:</strong> ${stats.numberValues}</li>
+                        <li><strong>Boolean Values:</strong> ${stats.booleanValues}</li>
+                        <li><strong>Null Values:</strong> ${stats.nullValues}</li>
+                    </ul>
+                `;
+                
+                jsonStats.style.display = 'block';
+            }
+
+            function analyzeJson(obj, depth = 0) {
+                let stats = {
+                    totalKeys: 0,
+                    nestedObjects: 0,
+                    arrays: 0,
+                    maxDepth: depth,
+                    stringValues: 0,
+                    numberValues: 0,
+                    booleanValues: 0,
+                    nullValues: 0
+                };
+
+                if (Array.isArray(obj)) {
+                    stats.arrays++;
+                    obj.forEach(item => {
+                        if (typeof item === 'object' && item !== null) {
+                            const subStats = analyzeJson(item, depth + 1);
+                            mergeStats(stats, subStats);
+                        } else {
+                            countValueType(stats, item);
+                        }
+                    });
+                } else if (typeof obj === 'object' && obj !== null) {
+                    stats.nestedObjects++;
+                    Object.keys(obj).forEach(key => {
+                        stats.totalKeys++;
+                        const value = obj[key];
+                        if (typeof value === 'object' && value !== null) {
+                            const subStats = analyzeJson(value, depth + 1);
+                            mergeStats(stats, subStats);
+                        } else {
+                            countValueType(stats, value);
+                        }
+                    });
+                }
+
+                return stats;
+            }
+
+            function countValueType(stats, value) {
+                if (typeof value === 'string') stats.stringValues++;
+                else if (typeof value === 'number') stats.numberValues++;
+                else if (typeof value === 'boolean') stats.booleanValues++;
+                else if (value === null) stats.nullValues++;
+            }
+
+            function mergeStats(target, source) {
+                target.totalKeys += source.totalKeys;
+                target.nestedObjects += source.nestedObjects;
+                target.arrays += source.arrays;
+                target.maxDepth = Math.max(target.maxDepth, source.maxDepth);
+                target.stringValues += source.stringValues;
+                target.numberValues += source.numberValues;
+                target.booleanValues += source.booleanValues;
+                target.nullValues += source.nullValues;
+            }
+
+            function applySyntaxHighlighting() {
+                const text = jsonInput.textContent;
+                const highlighted = highlightJson(text);
+                jsonInput.innerHTML = highlighted;
+            }
+
+            function highlightJson(json) {
+                return json
+                    .replace(/(".*?":)/g, '<span class="syntax-highlight">$1</span>')
+                    .replace(/(".*?")/g, '<span class="syntax-string">$1</span>')
+                    .replace(/\b(\d+\.?\d*)\b/g, '<span class="syntax-number">$1</span>')
+                    .replace(/\b(true|false)\b/g, '<span class="syntax-boolean">$1</span>')
+                    .replace(/\bnull\b/g, '<span class="syntax-null">null</span>');
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                notification.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            }
+
+            // Global functions for sample JSON
+            window.loadSample = function(type) {
+                const samples = {
+                    simple: '{"name": "John Doe", "age": 30, "city": "New York", "isActive": true}',
+                    complex: '{"user": {"id": 1, "name": "John Doe", "email": "john@example.com", "preferences": {"theme": "dark", "notifications": true}}, "posts": [{"id": 1, "title": "Hello World", "content": "This is my first post"}, {"id": 2, "title": "Second Post", "content": "Another post"}]}',
+                    array: '[{"id": 1, "name": "Item 1"}, {"id": 2, "name": "Item 2"}, {"id": 3, "name": "Item 3"}]',
+                    nested: '{"company": {"name": "Tech Corp", "employees": [{"id": 1, "name": "Alice", "department": {"id": 1, "name": "Engineering"}}, {"id": 2, "name": "Bob", "department": {"id": 2, "name": "Marketing"}}], "address": {"street": "123 Main St", "city": "Tech City", "country": "USA"}}}'
+                };
+                
+                jsonInput.textContent = samples[type] || samples.simple;
+                if (syntaxHighlight.checked) {
+                    applySyntaxHighlighting();
+                }
+                validateJson();
+            };
+        });
+    </script>
+</body>
+</html>

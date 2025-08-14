@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter - Multi-Tools Hub</title>
+    <meta name="description" content="Free online word counter tool. Count words, characters, sentences, and paragraphs in your text.">
+    <meta name="keywords" content="word counter, character counter, text analyzer, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Word Counter</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="tool-title">
+                        <i class="fas fa-calculator text-primary"></i>
+                        Word Counter
+                    </h1>
+                    <p class="tool-description">Count words, characters, sentences, and paragraphs in your text. Get detailed analysis including reading time and word frequency.</p>
+                    
+                    <!-- Text Input -->
+                    <div class="mb-4">
+                        <label for="textInput" class="form-label">Enter your text:</label>
+                        <textarea id="textInput" class="form-control" rows="10" placeholder="Paste or type your text here..."></textarea>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary me-2" onclick="clearText()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="btn btn-success me-2" onclick="copyText()">
+                            <i class="fas fa-copy"></i> Copy Text
+                        </button>
+                        <button class="btn btn-info" onclick="downloadText()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Results Section -->
+                    <div class="results-section">
+                        <h4><i class="fas fa-chart-bar text-primary"></i> Statistics</h4>
+                        
+                        <!-- Basic Counts -->
+                        <div class="result-item">
+                            <div class="result-label">Words:</div>
+                            <div class="result-value" id="wordCount">0</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Characters (with spaces):</div>
+                            <div class="result-value" id="charCountWithSpaces">0</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Characters (without spaces):</div>
+                            <div class="result-value" id="charCountWithoutSpaces">0</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Sentences:</div>
+                            <div class="result-value" id="sentenceCount">0</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Paragraphs:</div>
+                            <div class="result-value" id="paragraphCount">0</div>
+                        </div>
+                        
+                        <!-- Reading Analysis -->
+                        <div class="result-item">
+                            <div class="result-label">Reading Time:</div>
+                            <div class="result-value" id="readingTime">0 min</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Reading Level:</div>
+                            <div class="result-value" id="readingLevel">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Detailed Analysis -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="analysis-section">
+                        <h5><i class="fas fa-list text-success"></i> Common Words</h5>
+                        <div id="commonWords" class="common-words">
+                            <p class="text-muted">Start typing to see common words...</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="analysis-section">
+                        <h5><i class="fas fa-file-alt text-info"></i> Text Summary</h5>
+                        <div id="textSummary" class="text-summary">
+                            <p class="text-muted">Start typing to see text summary...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-tools me-2"></i>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for 100+ free online tools. From image converters to calculators, we've got everything you need.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>support@multitoolshub.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Tools Street, Web City</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/word-counter.js"></script>
+    <script>
+        // Standalone version - simplified initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const wordCount = document.getElementById('wordCount');
+            const charCountWithSpaces = document.getElementById('charCountWithSpaces');
+            const charCountWithoutSpaces = document.getElementById('charCountWithoutSpaces');
+            const sentenceCount = document.getElementById('sentenceCount');
+            const paragraphCount = document.getElementById('paragraphCount');
+            const readingTime = document.getElementById('readingTime');
+            const readingLevel = document.getElementById('readingLevel');
+            const commonWords = document.getElementById('commonWords');
+            const textSummary = document.getElementById('textSummary');
+
+            // Initialize word counter
+            initializeWordCounter();
+
+            function initializeWordCounter() {
+                // Add event listeners
+                textInput.addEventListener('input', updateStatistics);
+                textInput.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.key === 'Enter') {
+                        updateStatistics();
+                    }
+                });
+
+                // Auto-resize textarea
+                textInput.addEventListener('input', function() {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                });
+            }
+
+            function updateStatistics() {
+                const text = textInput.value;
+                
+                // Update basic counts
+                wordCount.textContent = countWords(text);
+                charCountWithSpaces.textContent = countCharacters(text, true);
+                charCountWithoutSpaces.textContent = countCharacters(text, false);
+                sentenceCount.textContent = countSentences(text);
+                paragraphCount.textContent = countParagraphs(text);
+                
+                // Update reading analysis
+                updateReadingTime(text);
+                updateReadingLevel(text);
+                updateCommonWords(text);
+                updateTextSummary(text);
+            }
+
+            function countWords(text) {
+                if (!text.trim()) return 0;
+                return text.trim().split(/\s+/).length;
+            }
+
+            function countCharacters(text, includeSpaces = true) {
+                if (includeSpaces) {
+                    return text.length;
+                } else {
+                    return text.replace(/\s/g, '').length;
+                }
+            }
+
+            function countSentences(text) {
+                if (!text.trim()) return 0;
+                return text.split(/[.!?]+/).filter(sentence => sentence.trim().length > 0).length;
+            }
+
+            function countParagraphs(text) {
+                if (!text.trim()) return 0;
+                return text.split(/\n\s*\n/).filter(paragraph => paragraph.trim().length > 0).length;
+            }
+
+            function updateReadingTime(text) {
+                const words = countWords(text);
+                const minutes = Math.ceil(words / 200); // Average reading speed
+                readingTime.textContent = `${minutes} min`;
+            }
+
+            function updateReadingLevel(text) {
+                const words = countWords(text);
+                const sentences = countSentences(text);
+                const characters = countCharacters(text, false);
+                
+                if (words === 0 || sentences === 0) {
+                    readingLevel.textContent = '-';
+                    return;
+                }
+                
+                const avgWordsPerSentence = words / sentences;
+                const avgCharactersPerWord = characters / words;
+                
+                let level = 'Elementary';
+                if (avgWordsPerSentence > 20 || avgCharactersPerWord > 5) {
+                    level = 'Advanced';
+                } else if (avgWordsPerSentence > 15 || avgCharactersPerWord > 4.5) {
+                    level = 'Intermediate';
+                } else if (avgWordsPerSentence > 10 || avgCharactersPerWord > 4) {
+                    level = 'Basic';
+                }
+                
+                readingLevel.textContent = level;
+            }
+
+            function updateCommonWords(text) {
+                if (!text.trim()) {
+                    commonWords.innerHTML = '<p class="text-muted">Start typing to see common words...</p>';
+                    return;
+                }
+                
+                const words = text.toLowerCase()
+                    .replace(/[^\w\s]/g, '')
+                    .split(/\s+/)
+                    .filter(word => word.length > 2);
+                
+                const wordFreq = {};
+                words.forEach(word => {
+                    wordFreq[word] = (wordFreq[word] || 0) + 1;
+                });
+                
+                const sortedWords = Object.entries(wordFreq)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 10);
+                
+                if (sortedWords.length === 0) {
+                    commonWords.innerHTML = '<p class="text-muted">No common words found...</p>';
+                    return;
+                }
+                
+                const wordList = sortedWords.map(([word, count]) => 
+                    `<span class="badge bg-primary me-1 mb-1">${word} (${count})</span>`
+                ).join('');
+                
+                commonWords.innerHTML = wordList;
+            }
+
+            function updateTextSummary(text) {
+                if (!text.trim()) {
+                    textSummary.innerHTML = '<p class="text-muted">Start typing to see text summary...</p>';
+                    return;
+                }
+                
+                const words = countWords(text);
+                const sentences = countSentences(text);
+                const paragraphs = countParagraphs(text);
+                const characters = countCharacters(text, false);
+                
+                const summary = `
+                    <ul class="list-unstyled">
+                        <li><strong>Text Length:</strong> ${words} words, ${characters} characters</li>
+                        <li><strong>Structure:</strong> ${sentences} sentences, ${paragraphs} paragraphs</li>
+                        <li><strong>Density:</strong> ${(characters / words).toFixed(1)} characters per word</li>
+                        <li><strong>Complexity:</strong> ${(words / sentences).toFixed(1)} words per sentence</li>
+                    </ul>
+                `;
+                
+                textSummary.innerHTML = summary;
+            }
+
+            // Utility functions
+            function clearText() {
+                textInput.value = '';
+                updateStatistics();
+                showNotification('Text cleared!', 'info');
+            }
+
+            function copyText() {
+                if (textInput.value.trim()) {
+                    navigator.clipboard.writeText(textInput.value).then(() => {
+                        showNotification('Text copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showNotification('Failed to copy text', 'error');
+                    });
+                } else {
+                    showNotification('No text to copy', 'warning');
+                }
+            }
+
+            function downloadText() {
+                if (textInput.value.trim()) {
+                    const blob = new Blob([textInput.value], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'text-content.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    showNotification('Text downloaded!', 'success');
+                } else {
+                    showNotification('No text to download', 'warning');
+                }
+            }
+
+            function showNotification(message, type = 'info') {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                notification.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                // Auto-remove after 3 seconds
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

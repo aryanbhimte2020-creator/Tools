@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Resizer - Multi-Tools Hub</title>
+    <meta name="description" content="Free online image resizer. Resize images to any dimensions while maintaining quality.">
+    <meta name="keywords" content="image resizer, resize image, image converter, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 250px;
+            border-radius: 4px;
+        }
+        
+        .resize-options {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .dimension-input {
+            max-width: 120px;
+        }
+        
+        .aspect-ratio-lock {
+            color: #007bff;
+            cursor: pointer;
+        }
+        
+        .aspect-ratio-lock.locked {
+            color: #28a745;
+        }
+        
+        .download-btn {
+            display: none;
+        }
+        
+        .quality-slider {
+            width: 100%;
+        }
+        
+        .format-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .format-option {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .format-option:hover {
+            border-color: #007bff;
+        }
+        
+        .format-option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Image Resizer</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-image me-2"></i>Image Resizer</h2>
+                            <p class="text-muted mb-0">Resize your images to any dimensions while maintaining quality</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- File Upload -->
+                            <div class="mb-4">
+                                <label for="imageInput" class="form-label">Select Image</label>
+                                <input type="file" class="form-control" id="imageInput" accept="image/*">
+                                <div class="form-text">Supported formats: JPG, PNG, GIF, WebP (Max 10MB)</div>
+                            </div>
+
+                            <!-- Image Preview -->
+                            <div class="image-preview" id="imagePreview">
+                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                <p class="text-muted">Preview will appear here</p>
+                            </div>
+
+                            <!-- Resize Options -->
+                            <div class="resize-options" id="resizeOptions" style="display: none;">
+                                <h5>Resize Options</h5>
+                                
+                                <!-- Preset Sizes -->
+                                <div class="mb-3">
+                                    <label class="form-label">Quick Presets</label>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <button class="btn btn-outline-primary btn-sm" onclick="setPresetSize(1920, 1080)">HD (1920x1080)</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="setPresetSize(1280, 720)">HD Ready (1280x720)</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="setPresetSize(800, 600)">SVGA (800x600)</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="setPresetSize(640, 480)">VGA (640x480)</button>
+                                        <button class="btn btn-outline-primary btn-sm" onclick="setPresetSize(300, 300)">Square (300x300)</button>
+                                    </div>
+                                </div>
+
+                                <!-- Custom Dimensions -->
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="widthInput" class="form-label">Width (px)</label>
+                                        <input type="number" class="form-control dimension-input" id="widthInput" min="1" max="5000">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="heightInput" class="form-label">Height (px)</label>
+                                        <input type="number" class="form-control dimension-input" id="heightInput" min="1" max="5000">
+                                    </div>
+                                </div>
+
+                                <!-- Aspect Ratio Lock -->
+                                <div class="mb-3">
+                                    <button class="btn btn-outline-secondary btn-sm" id="aspectRatioLock" onclick="toggleAspectRatio()">
+                                        <i class="fas fa-link"></i> Lock Aspect Ratio
+                                    </button>
+                                    <span class="ms-2 text-muted" id="aspectRatioInfo"></span>
+                                </div>
+
+                                <!-- Quality Settings -->
+                                <div class="mb-3">
+                                    <label for="qualitySlider" class="form-label">Quality: <span id="qualityValue">90</span>%</label>
+                                    <input type="range" class="form-range quality-slider" id="qualitySlider" min="1" max="100" value="90">
+                                </div>
+
+                                <!-- Format Options -->
+                                <div class="mb-3">
+                                    <label class="form-label">Output Format</label>
+                                    <div class="format-options">
+                                        <div class="format-option selected" data-format="jpeg">JPEG</div>
+                                        <div class="format-option" data-format="png">PNG</div>
+                                        <div class="format-option" data-format="webp">WebP</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="resizeImage()">
+                                        <i class="fas fa-resize-arrows-alt me-2"></i>Resize Image
+                                    </button>
+                                    <button class="btn btn-success download-btn" id="downloadBtn" onclick="downloadImage()">
+                                        <i class="fas fa-download me-2"></i>Download
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="resetTool()">
+                                        <i class="fas fa-redo me-2"></i>Reset
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Results -->
+                            <div id="results" class="mt-4" style="display: none;">
+                                <div class="alert alert-success">
+                                    <h5><i class="fas fa-check-circle me-2"></i>Image Resized Successfully!</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <strong>Original Size:</strong> <span id="originalSize"></span><br>
+                                            <strong>New Size:</strong> <span id="newSize"></span><br>
+                                            <strong>File Size:</strong> <span id="fileSize"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <strong>Format:</strong> <span id="outputFormat"></span><br>
+                                            <strong>Quality:</strong> <span id="outputQuality"></span>%<br>
+                                            <strong>Compression:</strong> <span id="compressionRatio"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let originalImage = null;
+        let originalWidth = 0;
+        let originalHeight = 0;
+        let aspectRatio = 1;
+        let isAspectRatioLocked = true;
+        let resizedImageData = null;
+
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeImageResizer();
+        });
+
+        function initializeImageResizer() {
+            // File input change event
+            document.getElementById('imageInput').addEventListener('change', handleImageUpload);
+            
+            // Dimension input events
+            document.getElementById('widthInput').addEventListener('input', handleDimensionChange);
+            document.getElementById('heightInput').addEventListener('input', handleDimensionChange);
+            
+            // Quality slider
+            document.getElementById('qualitySlider').addEventListener('input', function() {
+                document.getElementById('qualityValue').textContent = this.value;
+            });
+            
+            // Format options
+            document.querySelectorAll('.format-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.format-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // Validate file size (10MB limit)
+            if (file.size > 10 * 1024 * 1024) {
+                showNotification('File size must be less than 10MB', 'error');
+                return;
+            }
+
+            // Validate file type
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please select a valid image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    originalImage = img;
+                    originalWidth = img.naturalWidth;
+                    originalHeight = img.naturalHeight;
+                    aspectRatio = originalWidth / originalHeight;
+                    
+                    // Display preview
+                    displayImagePreview(e.target.result);
+                    
+                    // Set initial dimensions
+                    document.getElementById('widthInput').value = originalWidth;
+                    document.getElementById('heightInput').value = originalHeight;
+                    
+                    // Show resize options
+                    document.getElementById('resizeOptions').style.display = 'block';
+                    document.getElementById('results').style.display = 'none';
+                    document.getElementById('downloadBtn').style.display = 'none';
+                    
+                    // Update aspect ratio info
+                    updateAspectRatioInfo();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayImagePreview(dataUrl) {
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = `<img src="${dataUrl}" alt="Preview" class="img-fluid">`;
+        }
+
+        function handleDimensionChange(event) {
+            if (!originalImage) return;
+
+            const widthInput = document.getElementById('widthInput');
+            const heightInput = document.getElementById('heightInput');
+            
+            if (isAspectRatioLocked) {
+                if (event.target === widthInput) {
+                    const newWidth = parseInt(widthInput.value) || 0;
+                    const newHeight = Math.round(newWidth / aspectRatio);
+                    heightInput.value = newHeight;
+                } else {
+                    const newHeight = parseInt(heightInput.value) || 0;
+                    const newWidth = Math.round(newHeight * aspectRatio);
+                    widthInput.value = newWidth;
+                }
+            }
+            
+            updateAspectRatioInfo();
+        }
+
+        function toggleAspectRatio() {
+            isAspectRatioLocked = !isAspectRatioLocked;
+            const lockBtn = document.getElementById('aspectRatioLock');
+            
+            if (isAspectRatioLocked) {
+                lockBtn.innerHTML = '<i class="fas fa-link"></i> Lock Aspect Ratio';
+                lockBtn.classList.remove('btn-outline-success');
+                lockBtn.classList.add('btn-outline-secondary');
+            } else {
+                lockBtn.innerHTML = '<i class="fas fa-unlink"></i> Unlock Aspect Ratio';
+                lockBtn.classList.remove('btn-outline-secondary');
+                lockBtn.classList.add('btn-outline-success');
+            }
+            
+            updateAspectRatioInfo();
+        }
+
+        function updateAspectRatioInfo() {
+            const width = parseInt(document.getElementById('widthInput').value) || 0;
+            const height = parseInt(document.getElementById('heightInput').value) || 0;
+            const currentRatio = width / height;
+            
+            const info = document.getElementById('aspectRatioInfo');
+            if (width && height) {
+                info.textContent = `Ratio: ${currentRatio.toFixed(2)}:1`;
+            } else {
+                info.textContent = '';
+            }
+        }
+
+        function setPresetSize(width, height) {
+            document.getElementById('widthInput').value = width;
+            document.getElementById('heightInput').value = height;
+            updateAspectRatioInfo();
+        }
+
+        function resizeImage() {
+            if (!originalImage) {
+                showNotification('Please select an image first', 'error');
+                return;
+            }
+
+            const width = parseInt(document.getElementById('widthInput').value);
+            const height = parseInt(document.getElementById('heightInput').value);
+            const quality = parseInt(document.getElementById('qualitySlider').value);
+            const format = document.querySelector('.format-option.selected').dataset.format;
+
+            if (!width || !height) {
+                showNotification('Please enter valid dimensions', 'error');
+                return;
+            }
+
+            // Create canvas for resizing
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = width;
+            canvas.height = height;
+            
+            // Draw resized image
+            ctx.drawImage(originalImage, 0, 0, width, height);
+            
+            // Convert to blob
+            canvas.toBlob(function(blob) {
+                resizedImageData = blob;
+                
+                // Display results
+                displayResults(blob, format, quality);
+                
+                // Show download button
+                document.getElementById('downloadBtn').style.display = 'inline-block';
+                
+                showNotification('Image resized successfully!', 'success');
+            }, `image/${format}`, quality / 100);
+        }
+
+        function displayResults(blob, format, quality) {
+            const originalSize = originalImage.src.length * 0.75; // Approximate
+            const newSize = blob.size;
+            const compressionRatio = ((originalSize - newSize) / originalSize * 100).toFixed(1);
+            
+            document.getElementById('originalSize').textContent = `${originalWidth}x${originalHeight}px`;
+            document.getElementById('newSize').textContent = `${document.getElementById('widthInput').value}x${document.getElementById('heightInput').value}px`;
+            document.getElementById('fileSize').textContent = formatFileSize(newSize);
+            document.getElementById('outputFormat').textContent = format.toUpperCase();
+            document.getElementById('outputQuality').textContent = quality;
+            document.getElementById('compressionRatio').textContent = `${compressionRatio}% smaller`;
+            
+            document.getElementById('results').style.display = 'block';
+        }
+
+        function downloadImage() {
+            if (!resizedImageData) {
+                showNotification('No resized image available', 'error');
+                return;
+            }
+
+            const format = document.querySelector('.format-option.selected').dataset.format;
+            const url = URL.createObjectURL(resizedImageData);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `resized_image.${format}`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Image downloaded successfully!', 'success');
+        }
+
+        function resetTool() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreview').innerHTML = `
+                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                <p class="text-muted">Preview will appear here</p>
+            `;
+            document.getElementById('resizeOptions').style.display = 'none';
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('downloadBtn').style.display = 'none';
+            
+            originalImage = null;
+            originalWidth = 0;
+            originalHeight = 0;
+            aspectRatio = 1;
+            resizedImageData = null;
+            
+            showNotification('Tool reset successfully', 'success');
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hashtag Generator - Multi-Tools Hub</title>
+    <meta name="description" content="Free online hashtag generator. Generate relevant hashtags for your social media posts.">
+    <meta name="keywords" content="hashtag generator, social media hashtags, instagram hashtags, twitter hashtags, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .generator-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .hashtag-container {
+            background: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .hashtag-container:focus-within {
+            border-color: #007bff;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        
+        .hashtag-item {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 6px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid #bbdefb;
+        }
+        
+        .hashtag-item:hover {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .hashtag-item.selected {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+        
+        .category-selector {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .category-option {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .category-option:hover {
+            border-color: #007bff;
+        }
+        
+        .category-option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .hashtag-stats {
+            background: #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            display: inline-block;
+            margin-right: 20px;
+            font-size: 14px;
+        }
+        
+        .stat-number {
+            font-weight: bold;
+            font-size: 18px;
+            color: #007bff;
+        }
+        
+        .trending-hashtags {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .trending-title {
+            color: #856404;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .trending-hashtag {
+            display: inline-block;
+            background: #fff;
+            color: #856404;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .trending-hashtag:hover {
+            background: #856404;
+            color: white;
+        }
+        
+        .suggested-hashtags {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .suggestion-group {
+            margin-bottom: 15px;
+        }
+        
+        .suggestion-title {
+            font-weight: bold;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+        
+        .suggestion-hashtag {
+            display: inline-block;
+            background: #fff;
+            color: #6c757d;
+            padding: 4px 8px;
+            margin: 2px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #dee2e6;
+        }
+        
+        .suggestion-hashtag:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .history-item .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .history-item .meta {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .hashtag-count {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Hashtag Generator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-hashtag me-2"></i>Hashtag Generator</h2>
+                            <p class="text-muted mb-0">Generate relevant hashtags for your social media posts</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Generator Form -->
+                            <div class="generator-form">
+                                <h5>Content Information</h5>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-8">
+                                        <label for="contentDescription" class="form-label">Describe your content</label>
+                                        <textarea class="form-control" id="contentDescription" rows="3" placeholder="Describe what your post is about (e.g., 'Delicious homemade pizza with fresh ingredients')"></textarea>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="hashtagCount" class="form-label">Number of hashtags</label>
+                                        <select class="form-select" id="hashtagCount">
+                                            <option value="5">5 hashtags</option>
+                                            <option value="10" selected>10 hashtags</option>
+                                            <option value="15">15 hashtags</option>
+                                            <option value="20">20 hashtags</option>
+                                            <option value="30">30 hashtags</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="platform" class="form-label">Platform</label>
+                                        <select class="form-select" id="platform">
+                                            <option value="instagram" selected>Instagram</option>
+                                            <option value="twitter">Twitter</option>
+                                            <option value="tiktok">TikTok</option>
+                                            <option value="facebook">Facebook</option>
+                                            <option value="linkedin">LinkedIn</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="language" class="form-label">Language</label>
+                                        <select class="form-select" id="language">
+                                            <option value="en" selected>English</option>
+                                            <option value="es">Spanish</option>
+                                            <option value="fr">French</option>
+                                            <option value="de">German</option>
+                                            <option value="pt">Portuguese</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-4">Content Category</h5>
+                                <div class="category-selector">
+                                    <div class="category-option selected" data-category="general">General</div>
+                                    <div class="category-option" data-category="food">Food & Cooking</div>
+                                    <div class="category-option" data-category="travel">Travel</div>
+                                    <div class="category-option" data-category="fashion">Fashion & Style</div>
+                                    <div class="category-option" data-category="fitness">Fitness & Health</div>
+                                    <div class="category-option" data-category="business">Business</div>
+                                    <div class="category-option" data-category="technology">Technology</div>
+                                    <div class="category-option" data-category="art">Art & Design</div>
+                                    <div class="category-option" data-category="education">Education</div>
+                                    <div class="category-option" data-category="entertainment">Entertainment</div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="generateHashtags()">
+                                        <i class="fas fa-magic me-2"></i>Generate Hashtags
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="clearForm()">
+                                        <i class="fas fa-eraser me-2"></i>Clear Form
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Trending Hashtags -->
+                            <div class="trending-hashtags">
+                                <div class="trending-title">
+                                    <i class="fas fa-fire me-2"></i>Trending Hashtags
+                                </div>
+                                <div id="trendingContainer">
+                                    <!-- Trending hashtags will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- Hashtag Statistics -->
+                            <div class="hashtag-stats" id="hashtagStats" style="display: none;">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="totalHashtags">0</span> hashtags generated
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="avgLength">0</span> avg characters
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="popularity">0</span> avg popularity
+                                </div>
+                            </div>
+
+                            <!-- Generated Hashtags -->
+                            <div class="mb-4" id="hashtagsSection" style="display: none;">
+                                <label class="form-label">Generated Hashtags</label>
+                                <div class="hashtag-container">
+                                    <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyToClipboard()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <div class="hashtag-count" id="hashtagCount">0 hashtags</div>
+                                    <div id="hashtagsContainer">
+                                        <!-- Generated hashtags will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Suggested Hashtags -->
+                            <div class="suggested-hashtags" id="suggestedSection" style="display: none;">
+                                <h5>Suggested Hashtags by Category</h5>
+                                <div id="suggestedContainer">
+                                    <!-- Suggested hashtags will be populated here -->
+                                </div>
+                            </div>
+
+                            <!-- History -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Generation History</h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                        <i class="fas fa-trash me-1"></i>Clear History
+                                    </button>
+                                </div>
+                                <div id="historyContainer">
+                                    <!-- History items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Hashtag database
+        const hashtagDatabase = {
+            general: [
+                '#love', '#instagood', '#photooftheday', '#beautiful', '#fashion', '#happy', '#cute', '#followme', '#picoftheday', '#me',
+                '#selfie', '#summer', '#instadaily', '#friends', '#fun', '#style', '#instalike', '#swag', '#igers', '#like4like',
+                '#girl', '#amazing', '#nofilter', '#life', '#beauty', '#pretty', '#sun', '#photo', '#smile', '#fitness'
+            ],
+            food: [
+                '#food', '#foodporn', '#instafood', '#delicious', '#yummy', '#foodie', '#homemade', '#cooking', '#recipe', '#dinner',
+                '#lunch', '#breakfast', '#dessert', '#healthy', '#organic', '#vegan', '#vegetarian', '#glutenfree', '#baking', '#chef',
+                '#restaurant', '#streetfood', '#coffee', '#tea', '#wine', '#beer', '#cocktail', '#juice', '#smoothie', '#fresh'
+            ],
+            travel: [
+                '#travel', '#traveling', '#travelphotography', '#travelgram', '#wanderlust', '#adventure', '#explore', '#vacation', '#holiday', '#trip',
+                '#travelingram', '#travelblogger', '#traveling', '#travels', '#travelphoto', '#travelpics', '#traveling', '#travelbug', '#traveladdict', '#traveling',
+                '#wanderlust', '#adventure', '#explore', '#vacation', '#holiday', '#trip', '#travelingram', '#travelblogger', '#traveling', '#travels'
+            ],
+            fashion: [
+                '#fashion', '#style', '#ootd', '#fashionista', '#fashionblogger', '#streetstyle', '#fashionstyle', '#streetwear', '#fashionable', '#fashionweek',
+                '#fashiondesigner', '#fashionphotography', '#fashionmodel', '#fashionblog', '#fashionista', '#fashionstyle', '#streetstyle', '#ootd', '#style', '#fashion'
+            ],
+            fitness: [
+                '#fitness', '#workout', '#gym', '#training', '#motivation', '#health', '#healthy', '#exercise', '#fit', '#lifestyle',
+                '#bodybuilding', '#crossfit', '#yoga', '#running', '#cardio', '#strength', '#weightlifting', '#sports', '#athlete', '#fitnessmotivation'
+            ],
+            business: [
+                '#business', '#entrepreneur', '#success', '#motivation', '#inspiration', '#leadership', '#marketing', '#startup', '#entrepreneurship', '#smallbusiness',
+                '#money', '#wealth', '#finance', '#investment', '#stockmarket', '#trading', '#cryptocurrency', '#bitcoin', '#blockchain', '#innovation'
+            ],
+            technology: [
+                '#technology', '#tech', '#innovation', '#startup', '#coding', '#programming', '#developer', '#software', '#app', '#mobile',
+                '#ai', '#artificialintelligence', '#machinelearning', '#data', '#analytics', '#cybersecurity', '#cloud', '#iot', '#blockchain', '#fintech'
+            ],
+            art: [
+                '#art', '#artist', '#drawing', '#painting', '#sketch', '#illustration', '#design', '#graphicdesign', '#digitalart', '#creative',
+                '#photography', '#photo', '#photographer', '#portrait', '#landscape', '#nature', '#architecture', '#interiordesign', '#designer', '#creativity'
+            ],
+            education: [
+                '#education', '#learning', '#study', '#student', '#university', '#college', '#school', '#teacher', '#teaching', '#knowledge',
+                '#books', '#reading', '#library', '#research', '#science', '#math', '#history', '#literature', '#philosophy', '#academic'
+            ],
+            entertainment: [
+                '#entertainment', '#fun', '#comedy', '#humor', '#jokes', '#laugh', '#smile', '#happy', '#joy', '#funny',
+                '#music', '#song', '#singer', '#band', '#concert', '#festival', '#movie', '#film', '#cinema', '#actor'
+            ]
+        };
+
+        // Trending hashtags
+        const trendingHashtags = [
+            '#viral', '#trending', '#fyp', '#foryou', '#foryoupage', '#viralvideo', '#trendingnow', '#popular', '#hot', '#trending',
+            '#reels', '#reel', '#reelitfeelit', '#reelkarofeelkaro', '#reelsinstagram', '#reelsindia', '#reelvideo', '#reelviral', '#reelitfeelit', '#reelkarofeelkaro'
+        ];
+
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeHashtagGenerator();
+        });
+
+        function initializeHashtagGenerator() {
+            // Load history
+            loadHistory();
+            
+            // Category selector
+            document.querySelectorAll('.category-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+            
+            // Load trending hashtags
+            loadTrendingHashtags();
+            
+            // Auto-generate on input
+            document.getElementById('contentDescription').addEventListener('input', function() {
+                if (this.value.trim().length > 10) {
+                    generateHashtags();
+                }
+            });
+        }
+
+        function generateHashtags() {
+            const description = document.getElementById('contentDescription').value;
+            const count = parseInt(document.getElementById('hashtagCount').value);
+            const platform = document.getElementById('platform').value;
+            const language = document.getElementById('language').value;
+            const category = document.querySelector('.category-option.selected').dataset.category;
+            
+            if (!description.trim()) {
+                showNotification('Please enter a content description', 'error');
+                return;
+            }
+
+            // Generate hashtags based on description and category
+            let hashtags = [];
+            
+            // Add category-specific hashtags
+            if (hashtagDatabase[category]) {
+                hashtags = hashtags.concat(hashtagDatabase[category]);
+            }
+            
+            // Add general hashtags
+            hashtags = hashtags.concat(hashtagDatabase.general);
+            
+            // Add trending hashtags
+            hashtags = hashtags.concat(trendingHashtags);
+            
+            // Generate hashtags from description
+            const words = description.toLowerCase().split(/\s+/);
+            words.forEach(word => {
+                if (word.length > 3 && !hashtags.includes('#' + word)) {
+                    hashtags.push('#' + word);
+                }
+            });
+            
+            // Shuffle and limit
+            hashtags = shuffleArray(hashtags).slice(0, count);
+            
+            // Display hashtags
+            displayHashtags(hashtags);
+            
+            // Show suggested hashtags
+            showSuggestedHashtags(category);
+            
+            // Save to history
+            saveToHistory(description, hashtags);
+            
+            showNotification('Hashtags generated successfully!', 'success');
+        }
+
+        function displayHashtags(hashtags) {
+            const container = document.getElementById('hashtagsContainer');
+            const countDisplay = document.getElementById('hashtagCount');
+            
+            container.innerHTML = hashtags.map(hashtag => 
+                `<span class="hashtag-item" onclick="toggleHashtag(this)">${hashtag}</span>`
+            ).join('');
+            
+            countDisplay.textContent = `${hashtags.length} hashtags`;
+            
+            // Update statistics
+            updateStatistics(hashtags);
+            
+            document.getElementById('hashtagsSection').style.display = 'block';
+            document.getElementById('hashtagStats').style.display = 'block';
+        }
+
+        function toggleHashtag(element) {
+            element.classList.toggle('selected');
+        }
+
+        function updateStatistics(hashtags) {
+            const totalHashtags = hashtags.length;
+            const avgLength = Math.round(hashtags.reduce((sum, tag) => sum + tag.length, 0) / totalHashtags);
+            const popularity = Math.round(Math.random() * 50 + 50); // Simulated popularity score
+            
+            document.getElementById('totalHashtags').textContent = totalHashtags;
+            document.getElementById('avgLength').textContent = avgLength;
+            document.getElementById('popularity').textContent = popularity;
+        }
+
+        function showSuggestedHashtags(category) {
+            const container = document.getElementById('suggestedContainer');
+            let html = '';
+            
+            // Show suggestions for current category and general
+            const categories = [category, 'general'];
+            if (category !== 'general') {
+                categories.push('general');
+            }
+            
+            categories.forEach(cat => {
+                if (hashtagDatabase[cat]) {
+                    html += `
+                        <div class="suggestion-group">
+                            <div class="suggestion-title">${cat.charAt(0).toUpperCase() + cat.slice(1)}</div>
+                            ${hashtagDatabase[cat].slice(0, 10).map(hashtag => 
+                                `<span class="suggestion-hashtag" onclick="addHashtag('${hashtag}')">${hashtag}</span>`
+                            ).join('')}
+                        </div>
+                    `;
+                }
+            });
+            
+            container.innerHTML = html;
+            document.getElementById('suggestedSection').style.display = 'block';
+        }
+
+        function addHashtag(hashtag) {
+            const container = document.getElementById('hashtagsContainer');
+            const hashtagElement = document.createElement('span');
+            hashtagElement.className = 'hashtag-item';
+            hashtagElement.textContent = hashtag;
+            hashtagElement.onclick = function() { toggleHashtag(this); };
+            
+            container.appendChild(hashtagElement);
+            
+            // Update count
+            const count = container.children.length;
+            document.getElementById('hashtagCount').textContent = `${count} hashtags`;
+            
+            showNotification('Hashtag added!', 'success');
+        }
+
+        function loadTrendingHashtags() {
+            const container = document.getElementById('trendingContainer');
+            container.innerHTML = trendingHashtags.slice(0, 15).map(hashtag => 
+                `<span class="trending-hashtag" onclick="addHashtag('${hashtag}')">${hashtag}</span>`
+            ).join('');
+        }
+
+        function copyToClipboard() {
+            const hashtagItems = document.querySelectorAll('.hashtag-item');
+            if (hashtagItems.length === 0) {
+                showNotification('No hashtags to copy', 'error');
+                return;
+            }
+
+            const hashtags = Array.from(hashtagItems).map(item => item.textContent).join(' ');
+            
+            navigator.clipboard.writeText(hashtags).then(function() {
+                showNotification('Hashtags copied to clipboard!', 'success');
+            }).catch(function() {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = hashtags;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Hashtags copied to clipboard!', 'success');
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('contentDescription').value = '';
+            document.getElementById('hashtagCount').value = '10';
+            document.getElementById('platform').value = 'instagram';
+            document.getElementById('language').value = 'en';
+            
+            document.querySelectorAll('.category-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('.category-option[data-category="general"]').classList.add('selected');
+            
+            document.getElementById('hashtagsSection').style.display = 'none';
+            document.getElementById('hashtagStats').style.display = 'none';
+            document.getElementById('suggestedSection').style.display = 'none';
+            
+            showNotification('Form cleared successfully', 'success');
+        }
+
+        function shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        function saveToHistory(description, hashtags) {
+            const history = JSON.parse(localStorage.getItem('hashtagHistory') || '[]');
+            const historyItem = {
+                description: description,
+                hashtags: hashtags,
+                timestamp: new Date().toISOString()
+            };
+
+            // Add to beginning of array
+            history.unshift(historyItem);
+
+            // Keep only last 10 items
+            if (history.length > 10) {
+                history.pop();
+            }
+
+            localStorage.setItem('hashtagHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function loadHistory() {
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('hashtagHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No generation history yet. Generate some hashtags to see it here.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item" onclick="loadFromHistory(${index})">
+                    <div class="title">${escapeHtml(item.description.substring(0, 50) + (item.description.length > 50 ? '...' : ''))}</div>
+                    <div class="meta">
+                        ${item.hashtags.length} hashtags • ${formatDate(item.timestamp)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const history = JSON.parse(localStorage.getItem('hashtagHistory') || '[]');
+            if (history[index]) {
+                const item = history[index];
+                document.getElementById('contentDescription').value = item.description;
+                displayHashtags(item.hashtags);
+                showNotification('Loaded from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('hashtagHistory');
+            updateHistoryDisplay();
+            showNotification('History cleared!', 'success');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

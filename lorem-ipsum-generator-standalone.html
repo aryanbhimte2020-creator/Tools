@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lorem Ipsum Generator - Multi-Tools Hub</title>
+    <meta name="description" content="Free online Lorem Ipsum generator. Generate placeholder text for your projects with customizable options.">
+    <meta name="keywords" content="lorem ipsum, placeholder text, text generator, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .generator-options {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .output-container {
+            background: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .output-container:focus-within {
+            border-color: #007bff;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        
+        .word-count {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .preset-btn {
+            padding: 6px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .preset-btn:hover {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .format-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .format-option {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .format-option:hover {
+            border-color: #007bff;
+        }
+        
+        .format-option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .history-item .text {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-bottom: 5px;
+        }
+        
+        .history-item .meta {
+            font-size: 0.8em;
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Lorem Ipsum Generator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-text-width me-2"></i>Lorem Ipsum Generator</h2>
+                            <p class="text-muted mb-0">Generate placeholder text for your projects</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Generator Options -->
+                            <div class="generator-options">
+                                <h5>Generator Options</h5>
+                                
+                                <!-- Preset Buttons -->
+                                <div class="preset-buttons">
+                                    <button class="preset-btn" onclick="setPreset('paragraphs', 3)">3 Paragraphs</button>
+                                    <button class="preset-btn" onclick="setPreset('paragraphs', 5)">5 Paragraphs</button>
+                                    <button class="preset-btn" onclick="setPreset('words', 50)">50 Words</button>
+                                    <button class="preset-btn" onclick="setPreset('words', 100)">100 Words</button>
+                                    <button class="preset-btn" onclick="setPreset('characters', 500)">500 Characters</button>
+                                    <button class="preset-btn" onclick="setPreset('characters', 1000)">1000 Characters</button>
+                                </div>
+
+                                <!-- Custom Options -->
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="amountInput" class="form-label">Amount</label>
+                                        <input type="number" class="form-control" id="amountInput" value="3" min="1" max="1000">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="unitSelect" class="form-label">Unit</label>
+                                        <select class="form-select" id="unitSelect">
+                                            <option value="paragraphs">Paragraphs</option>
+                                            <option value="sentences">Sentences</option>
+                                            <option value="words">Words</option>
+                                            <option value="characters">Characters</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="startWithLorem" class="form-label">Start with "Lorem ipsum"</label>
+                                        <select class="form-select" id="startWithLorem">
+                                            <option value="true">Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Format Options -->
+                                <div class="mb-3">
+                                    <label class="form-label">Output Format</label>
+                                    <div class="format-options">
+                                        <div class="format-option selected" data-format="plain">Plain Text</div>
+                                        <div class="format-option" data-format="html">HTML</div>
+                                        <div class="format-option" data-format="markdown">Markdown</div>
+                                    </div>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="generateLoremIpsum()">
+                                        <i class="fas fa-magic me-2"></i>Generate
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="clearOutput()">
+                                        <i class="fas fa-eraser me-2"></i>Clear
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Output -->
+                            <div class="mb-4">
+                                <label class="form-label">Generated Text</label>
+                                <div class="output-container">
+                                    <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyToClipboard()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <div class="word-count" id="wordCount">0 words</div>
+                                    <div class="form-control-plaintext" id="outputText" contenteditable="true" style="border: none; outline: none; min-height: 150px; resize: vertical;"></div>
+                                </div>
+                            </div>
+
+                            <!-- History -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Generation History</h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                        <i class="fas fa-trash me-1"></i>Clear History
+                                    </button>
+                                </div>
+                                <div id="historyContainer">
+                                    <!-- History items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Lorem Ipsum words
+        const loremWords = [
+            'lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur', 'adipiscing', 'elit', 'sed', 'do',
+            'eiusmod', 'tempor', 'incididunt', 'ut', 'labore', 'et', 'dolore', 'magna', 'aliqua', 'ut',
+            'enim', 'ad', 'minim', 'veniam', 'quis', 'nostrud', 'exercitation', 'ullamco', 'laboris',
+            'nisi', 'ut', 'aliquip', 'ex', 'ea', 'commodo', 'consequat', 'duis', 'aute', 'irure',
+            'dolor', 'in', 'reprehenderit', 'in', 'voluptate', 'velit', 'esse', 'cillum', 'dolore',
+            'eu', 'fugiat', 'nulla', 'pariatur', 'excepteur', 'sint', 'occaecat', 'cupidatat', 'non',
+            'proident', 'sunt', 'culpa', 'qui', 'officia', 'deserunt', 'mollit', 'anim', 'id', 'est',
+            'laborum', 'sed', 'ut', 'perspiciatis', 'unde', 'omnis', 'iste', 'natus', 'error', 'sit',
+            'voluptatem', 'accusantium', 'doloremque', 'laudantium', 'totam', 'rem', 'aperiam', 'eaque',
+            'ipsa', 'quae', 'ab', 'illo', 'inventore', 'veritatis', 'et', 'quasi', 'architecto',
+            'beatae', 'vitae', 'dicta', 'sunt', 'explicabo', 'nemo', 'enim', 'ipsam', 'voluptatem',
+            'quia', 'voluptas', 'sit', 'aspernatur', 'aut', 'odit', 'aut', 'fugit', 'sed', 'quia',
+            'consequuntur', 'magni', 'dolores', 'eos', 'qui', 'ratione', 'voluptatem', 'sequi',
+            'nesciunt', 'neque', 'porro', 'quisquam', 'est', 'qui', 'dolorem', 'ipsum', 'quia',
+            'dolor', 'sit', 'amet', 'consectetur', 'adipisci', 'velit', 'sed', 'quia', 'non',
+            'numquam', 'eius', 'modi', 'tempora', 'incidunt', 'ut', 'labore', 'et', 'dolore',
+            'magnam', 'aliquam', 'quaerat', 'voluptatem', 'ut', 'enim', 'ad', 'minima', 'veniam',
+            'quis', 'nostrum', 'exercitationem', 'ullam', 'corporis', 'suscipit', 'laboriosam',
+            'nisi', 'ut', 'aliquid', 'ex', 'ea', 'commodi', 'consequatur', 'quis', 'autem',
+            'vel', 'eum', 'iure', 'reprehenderit', 'qui', 'in', 'ea', 'voluptate', 'velit',
+            'esse', 'quam', 'nihil', 'molestiae', 'consequatur', 'vel', 'illum', 'qui', 'dolorem',
+            'eum', 'fugiat', 'quo', 'voluptas', 'nulla', 'pariatur', 'at', 'vero', 'eos', 'et',
+            'accusamus', 'et', 'iusto', 'odio', 'dignissimos', 'ducimus', 'qui', 'blanditiis',
+            'praesentium', 'voluptatum', 'deleniti', 'atque', 'corrupti', 'quos', 'dolores',
+            'et', 'quas', 'molestias', 'excepturi', 'sint', 'occaecati', 'cupiditate', 'non',
+            'provident', 'similique', 'sunt', 'in', 'culpa', 'qui', 'officia', 'deserunt',
+            'mollitia', 'animi', 'id', 'est', 'laborum', 'et', 'dolorum', 'fuga', 'et', 'harum',
+            'quidem', 'rerum', 'facilis', 'est', 'et', 'expedita', 'distinctio', 'nam', 'libero',
+            'tempore', 'cum', 'soluta', 'nobis', 'est', 'eligendi', 'optio', 'cumque', 'nihil',
+            'impedit', 'quo', 'minus', 'id', 'quod', 'maxime', 'placeat', 'facere', 'possimus',
+            'omnis', 'voluptas', 'assumenda', 'est', 'omnis', 'dolor', 'repellendus', 'temporibus',
+            'autem', 'quibusdam', 'et', 'aut', 'officiis', 'debitis', 'aut', 'rerum', 'necessitatibus',
+            'saepe', 'eveniet', 'ut', 'et', 'voluptates', 'repudiandae', 'sint', 'et', 'molestiae',
+            'non', 'recusandae', 'itaque', 'earum', 'rerum', 'hic', 'tenetur', 'a', 'sapiente',
+            'delectus', 'ut', 'aut', 'reiciendis', 'voluptatibus', 'maiores', 'alias', 'consequatur',
+            'aut', 'perferendis', 'doloribus', 'asperiores', 'repellat'
+        ];
+
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeLoremGenerator();
+        });
+
+        function initializeLoremGenerator() {
+            // Load history
+            loadHistory();
+            
+            // Add event listeners
+            document.getElementById('outputText').addEventListener('input', updateWordCount);
+            
+            // Generate initial text
+            generateLoremIpsum();
+        }
+
+        function setPreset(unit, amount) {
+            document.getElementById('unitSelect').value = unit;
+            document.getElementById('amountInput').value = amount;
+            generateLoremIpsum();
+        }
+
+        function generateLoremIpsum() {
+            const amount = parseInt(document.getElementById('amountInput').value);
+            const unit = document.getElementById('unitSelect').value;
+            const startWithLorem = document.getElementById('startWithLorem').value === 'true';
+            const format = document.querySelector('.format-option.selected').dataset.format;
+
+            let generatedText = '';
+
+            switch (unit) {
+                case 'paragraphs':
+                    generatedText = generateParagraphs(amount, startWithLorem);
+                    break;
+                case 'sentences':
+                    generatedText = generateSentences(amount, startWithLorem);
+                    break;
+                case 'words':
+                    generatedText = generateWords(amount, startWithLorem);
+                    break;
+                case 'characters':
+                    generatedText = generateCharacters(amount, startWithLorem);
+                    break;
+            }
+
+            // Format the text
+            generatedText = formatText(generatedText, format);
+
+            // Display the text
+            document.getElementById('outputText').innerHTML = generatedText;
+            updateWordCount();
+
+            // Save to history
+            saveToHistory(generatedText, amount, unit, format);
+        }
+
+        function generateParagraphs(count, startWithLorem) {
+            let paragraphs = [];
+            for (let i = 0; i < count; i++) {
+                const sentenceCount = Math.floor(Math.random() * 4) + 3; // 3-6 sentences
+                let paragraph = generateSentences(sentenceCount, startWithLorem && i === 0);
+                paragraphs.push(paragraph);
+            }
+            return paragraphs.join('\n\n');
+        }
+
+        function generateSentences(count, startWithLorem) {
+            let sentences = [];
+            for (let i = 0; i < count; i++) {
+                const wordCount = Math.floor(Math.random() * 15) + 8; // 8-22 words
+                let sentence = generateWords(wordCount, startWithLorem && i === 0);
+                sentence = sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+                sentences.push(sentence);
+            }
+            return sentences.join(' ');
+        }
+
+        function generateWords(count, startWithLorem) {
+            let words = [];
+            
+            if (startWithLorem) {
+                words.push('Lorem', 'ipsum');
+                count -= 2;
+            }
+
+            for (let i = 0; i < count; i++) {
+                const randomIndex = Math.floor(Math.random() * loremWords.length);
+                words.push(loremWords[randomIndex]);
+            }
+
+            return words.join(' ');
+        }
+
+        function generateCharacters(count, startWithLorem) {
+            let text = '';
+            if (startWithLorem) {
+                text = 'Lorem ipsum ';
+                count -= 12;
+            }
+
+            while (text.length < count) {
+                const wordCount = Math.floor(Math.random() * 8) + 3;
+                const words = generateWords(wordCount, false);
+                text += words + ' ';
+            }
+
+            return text.substring(0, count).trim();
+        }
+
+        function formatText(text, format) {
+            switch (format) {
+                case 'html':
+                    return text.replace(/\n\n/g, '</p><p>').replace(/^/, '<p>').replace(/$/, '</p>');
+                case 'markdown':
+                    return text.replace(/\n\n/g, '\n\n');
+                default:
+                    return text;
+            }
+        }
+
+        function updateWordCount() {
+            const text = document.getElementById('outputText').textContent || document.getElementById('outputText').innerText;
+            const wordCount = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+            document.getElementById('wordCount').textContent = `${wordCount} words`;
+        }
+
+        function copyToClipboard() {
+            const text = document.getElementById('outputText').textContent || document.getElementById('outputText').innerText;
+            navigator.clipboard.writeText(text).then(function() {
+                showNotification('Text copied to clipboard!', 'success');
+            }).catch(function() {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Text copied to clipboard!', 'success');
+            });
+        }
+
+        function clearOutput() {
+            document.getElementById('outputText').innerHTML = '';
+            updateWordCount();
+        }
+
+        function saveToHistory(text, amount, unit, format) {
+            const history = JSON.parse(localStorage.getItem('loremHistory') || '[]');
+            const historyItem = {
+                text: text.substring(0, 100) + (text.length > 100 ? '...' : ''),
+                fullText: text,
+                amount: amount,
+                unit: unit,
+                format: format,
+                timestamp: new Date().toISOString()
+            };
+
+            // Add to beginning of array
+            history.unshift(historyItem);
+
+            // Keep only last 20 items
+            if (history.length > 20) {
+                history.pop();
+            }
+
+            localStorage.setItem('loremHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function loadHistory() {
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('loremHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No history yet. Generate some text to see it here.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item" onclick="loadFromHistory(${index})">
+                    <div class="text">${item.text}</div>
+                    <div class="meta">${item.amount} ${item.unit} • ${item.format} • ${formatDate(item.timestamp)}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const history = JSON.parse(localStorage.getItem('loremHistory') || '[]');
+            if (history[index]) {
+                const item = history[index];
+                document.getElementById('outputText').innerHTML = item.fullText;
+                updateWordCount();
+                showNotification('Loaded from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('loremHistory');
+            updateHistoryDisplay();
+            showNotification('History cleared!', 'success');
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

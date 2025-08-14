@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meta Tag Generator - Multi-Tools Hub</title>
+    <meta name="description" content="Free online meta tag generator. Create SEO-optimized meta tags for your website.">
+    <meta name="keywords" content="meta tag generator, SEO meta tags, HTML meta tags, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .generator-form {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .output-container {
+            background: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 200px;
+            position: relative;
+        }
+        
+        .output-container:focus-within {
+            border-color: #007bff;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+        
+        .preview-section {
+            background: #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 600px;
+        }
+        
+        .preview-title {
+            color: #1a0dab;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .preview-url {
+            color: #006621;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        
+        .preview-description {
+            color: #545454;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .tag-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .tag-option {
+            padding: 8px 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .tag-option:hover {
+            border-color: #007bff;
+        }
+        
+        .tag-option.selected {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .social-preview {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .social-card {
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            max-width: 500px;
+        }
+        
+        .social-image {
+            width: 100%;
+            height: 200px;
+            background: #f1f3f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        
+        .social-content {
+            padding: 15px;
+        }
+        
+        .social-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .social-description {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .history-item {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #f8f9fa;
+            border-color: #007bff;
+        }
+        
+        .history-item .title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .history-item .meta {
+            font-size: 0.8em;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Meta Tag Generator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i class="fas fa-tags me-2"></i>Meta Tag Generator</h2>
+                            <p class="text-muted mb-0">Generate SEO-optimized meta tags for your website</p>
+                        </div>
+                        <div class="card-body">
+                            <!-- Generator Form -->
+                            <div class="generator-form">
+                                <h5>Basic Information</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="pageTitle" class="form-label">Page Title</label>
+                                        <input type="text" class="form-control" id="pageTitle" placeholder="Enter your page title">
+                                        <div class="form-text">Recommended: 50-60 characters</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="pageUrl" class="form-label">Page URL</label>
+                                        <input type="url" class="form-control" id="pageUrl" placeholder="https://example.com/page">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-12">
+                                        <label for="pageDescription" class="form-label">Meta Description</label>
+                                        <textarea class="form-control" id="pageDescription" rows="3" placeholder="Enter a compelling description of your page"></textarea>
+                                        <div class="form-text">Recommended: 150-160 characters</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="keywords" class="form-label">Keywords</label>
+                                        <input type="text" class="form-control" id="keywords" placeholder="keyword1, keyword2, keyword3">
+                                        <div class="form-text">Separate with commas</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="author" class="form-label">Author</label>
+                                        <input type="text" class="form-control" id="author" placeholder="Your name or company">
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="robots" class="form-label">Robots</label>
+                                        <select class="form-select" id="robots">
+                                            <option value="index,follow">index, follow</option>
+                                            <option value="noindex,nofollow">noindex, nofollow</option>
+                                            <option value="index,nofollow">index, nofollow</option>
+                                            <option value="noindex,follow">noindex, follow</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="language" class="form-label">Language</label>
+                                        <select class="form-select" id="language">
+                                            <option value="en">English</option>
+                                            <option value="es">Spanish</option>
+                                            <option value="fr">French</option>
+                                            <option value="de">German</option>
+                                            <option value="it">Italian</option>
+                                            <option value="pt">Portuguese</option>
+                                            <option value="ru">Russian</option>
+                                            <option value="ja">Japanese</option>
+                                            <option value="ko">Korean</option>
+                                            <option value="zh">Chinese</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-4">Social Media</h5>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="socialTitle" class="form-label">Social Media Title</label>
+                                        <input type="text" class="form-control" id="socialTitle" placeholder="Title for social media sharing">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="socialDescription" class="form-label">Social Media Description</label>
+                                        <textarea class="form-control" id="socialDescription" rows="2" placeholder="Description for social media sharing"></textarea>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="socialImage" class="form-label">Social Media Image URL</label>
+                                        <input type="url" class="form-control" id="socialImage" placeholder="https://example.com/image.jpg">
+                                        <div class="form-text">Recommended: 1200x630 pixels</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="twitterCard" class="form-label">Twitter Card Type</label>
+                                        <select class="form-select" id="twitterCard">
+                                            <option value="summary">Summary</option>
+                                            <option value="summary_large_image">Summary Large Image</option>
+                                            <option value="app">App</option>
+                                            <option value="player">Player</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <h5 class="mt-4">Additional Options</h5>
+                                <div class="tag-options">
+                                    <div class="tag-option selected" data-tag="basic">Basic Meta Tags</div>
+                                    <div class="tag-option" data-tag="social">Social Media Tags</div>
+                                    <div class="tag-option" data-tag="advanced">Advanced SEO Tags</div>
+                                    <div class="tag-option" data-tag="all">All Tags</div>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-primary" onclick="generateMetaTags()">
+                                        <i class="fas fa-magic me-2"></i>Generate Meta Tags
+                                    </button>
+                                    <button class="btn btn-secondary" onclick="clearForm()">
+                                        <i class="fas fa-eraser me-2"></i>Clear Form
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Preview Section -->
+                            <div class="preview-section" id="previewSection" style="display: none;">
+                                <h5>Search Engine Preview</h5>
+                                <div class="preview-card" id="searchPreview">
+                                    <!-- Search preview will be populated here -->
+                                </div>
+                                
+                                <h5 class="mt-4">Social Media Preview</h5>
+                                <div class="social-preview">
+                                    <div class="social-card" id="socialPreview">
+                                        <!-- Social preview will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Output -->
+                            <div class="mb-4" id="outputSection" style="display: none;">
+                                <label class="form-label">Generated Meta Tags</label>
+                                <div class="output-container">
+                                    <button class="btn btn-sm btn-outline-secondary copy-btn" onclick="copyToClipboard()">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <pre class="form-control-plaintext" id="metaTagsOutput" style="border: none; outline: none; min-height: 200px; resize: vertical; font-family: 'Courier New', monospace; font-size: 14px;"></pre>
+                                </div>
+                            </div>
+
+                            <!-- History -->
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5>Generation History</h5>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="clearHistory()">
+                                        <i class="fas fa-trash me-1"></i>Clear History
+                                    </button>
+                                </div>
+                                <div id="historyContainer">
+                                    <!-- History items will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p class="text-muted">Your one-stop destination for free online tools</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p class="text-muted mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize tool
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMetaGenerator();
+        });
+
+        function initializeMetaGenerator() {
+            // Load history
+            loadHistory();
+            
+            // Add event listeners
+            document.getElementById('pageTitle').addEventListener('input', updatePreview);
+            document.getElementById('pageDescription').addEventListener('input', updatePreview);
+            document.getElementById('pageUrl').addEventListener('input', updatePreview);
+            document.getElementById('socialTitle').addEventListener('input', updatePreview);
+            document.getElementById('socialDescription').addEventListener('input', updatePreview);
+            document.getElementById('socialImage').addEventListener('input', updatePreview);
+            
+            // Tag options
+            document.querySelectorAll('.tag-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.tag-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        function generateMetaTags() {
+            const pageTitle = document.getElementById('pageTitle').value;
+            const pageUrl = document.getElementById('pageUrl').value;
+            const pageDescription = document.getElementById('pageDescription').value;
+            const keywords = document.getElementById('keywords').value;
+            const author = document.getElementById('author').value;
+            const robots = document.getElementById('robots').value;
+            const language = document.getElementById('language').value;
+            const socialTitle = document.getElementById('socialTitle').value;
+            const socialDescription = document.getElementById('socialDescription').value;
+            const socialImage = document.getElementById('socialImage').value;
+            const twitterCard = document.getElementById('twitterCard').value;
+            const selectedTags = document.querySelector('.tag-option.selected').dataset.tag;
+
+            if (!pageTitle.trim()) {
+                showNotification('Please enter a page title', 'error');
+                return;
+            }
+
+            let metaTags = '';
+
+            // Basic meta tags
+            if (['basic', 'all'].includes(selectedTags)) {
+                metaTags += `<!-- Basic Meta Tags -->\n`;
+                metaTags += `<title>${escapeHtml(pageTitle)}</title>\n`;
+                metaTags += `<meta charset="UTF-8">\n`;
+                metaTags += `<meta name="viewport" content="width=device-width, initial-scale=1.0">\n`;
+                metaTags += `<meta name="description" content="${escapeHtml(pageDescription)}">\n`;
+                if (keywords.trim()) {
+                    metaTags += `<meta name="keywords" content="${escapeHtml(keywords)}">\n`;
+                }
+                if (author.trim()) {
+                    metaTags += `<meta name="author" content="${escapeHtml(author)}">\n`;
+                }
+                metaTags += `<meta name="robots" content="${robots}">\n`;
+                metaTags += `<meta http-equiv="Content-Language" content="${language}">\n\n`;
+            }
+
+            // Social media tags
+            if (['social', 'all'].includes(selectedTags)) {
+                metaTags += `<!-- Social Media Meta Tags -->\n`;
+                metaTags += `<!-- Open Graph / Facebook -->\n`;
+                metaTags += `<meta property="og:type" content="website">\n`;
+                metaTags += `<meta property="og:url" content="${escapeHtml(pageUrl)}">\n`;
+                metaTags += `<meta property="og:title" content="${escapeHtml(socialTitle || pageTitle)}">\n`;
+                metaTags += `<meta property="og:description" content="${escapeHtml(socialDescription || pageDescription)}">\n`;
+                if (socialImage.trim()) {
+                    metaTags += `<meta property="og:image" content="${escapeHtml(socialImage)}">\n`;
+                }
+                metaTags += `<meta property="og:site_name" content="${escapeHtml(pageTitle)}">\n\n`;
+
+                metaTags += `<!-- Twitter -->\n`;
+                metaTags += `<meta property="twitter:card" content="${twitterCard}">\n`;
+                metaTags += `<meta property="twitter:url" content="${escapeHtml(pageUrl)}">\n`;
+                metaTags += `<meta property="twitter:title" content="${escapeHtml(socialTitle || pageTitle)}">\n`;
+                metaTags += `<meta property="twitter:description" content="${escapeHtml(socialDescription || pageDescription)}">\n`;
+                if (socialImage.trim()) {
+                    metaTags += `<meta property="twitter:image" content="${escapeHtml(socialImage)}">\n`;
+                }
+                metaTags += `\n`;
+            }
+
+            // Advanced SEO tags
+            if (['advanced', 'all'].includes(selectedTags)) {
+                metaTags += `<!-- Advanced SEO Meta Tags -->\n`;
+                metaTags += `<meta name="googlebot" content="${robots}">\n`;
+                metaTags += `<meta name="bingbot" content="${robots}">\n`;
+                metaTags += `<meta name="revisit-after" content="7 days">\n`;
+                metaTags += `<meta name="distribution" content="global">\n`;
+                metaTags += `<meta name="rating" content="general">\n`;
+                metaTags += `<meta name="coverage" content="worldwide">\n`;
+                metaTags += `<meta name="target" content="all">\n`;
+                metaTags += `<meta name="HandheldFriendly" content="true">\n`;
+                metaTags += `<meta name="format-detection" content="telephone=no">\n`;
+                metaTags += `<meta name="theme-color" content="#007bff">\n`;
+                metaTags += `<meta name="msapplication-TileColor" content="#007bff">\n`;
+                metaTags += `<meta name="apple-mobile-web-app-capable" content="yes">\n`;
+                metaTags += `<meta name="apple-mobile-web-app-status-bar-style" content="default">\n`;
+                metaTags += `<meta name="apple-mobile-web-app-title" content="${escapeHtml(pageTitle)}">\n`;
+            }
+
+            // Display output
+            document.getElementById('metaTagsOutput').textContent = metaTags;
+            document.getElementById('outputSection').style.display = 'block';
+            
+            // Update preview
+            updatePreview();
+            
+            // Save to history
+            saveToHistory(pageTitle, pageDescription, metaTags);
+            
+            showNotification('Meta tags generated successfully!', 'success');
+        }
+
+        function updatePreview() {
+            const pageTitle = document.getElementById('pageTitle').value;
+            const pageDescription = document.getElementById('pageDescription').value;
+            const pageUrl = document.getElementById('pageUrl').value;
+            const socialTitle = document.getElementById('socialTitle').value;
+            const socialDescription = document.getElementById('socialDescription').value;
+            const socialImage = document.getElementById('socialImage').value;
+
+            if (pageTitle.trim()) {
+                // Update search preview
+                const searchPreview = document.getElementById('searchPreview');
+                searchPreview.innerHTML = `
+                    <div class="preview-title">${escapeHtml(pageTitle)}</div>
+                    <div class="preview-url">${escapeHtml(pageUrl || 'https://example.com')}</div>
+                    <div class="preview-description">${escapeHtml(pageDescription || 'No description provided')}</div>
+                `;
+
+                // Update social preview
+                const socialPreview = document.getElementById('socialPreview');
+                socialPreview.innerHTML = `
+                    ${socialImage ? `<div class="social-image"><img src="${escapeHtml(socialImage)}" alt="Social preview" style="width: 100%; height: 100%; object-fit: cover;">` : '<div class="social-image"><i class="fas fa-image fa-3x"></i><br>No image</div>'}
+                    <div class="social-content">
+                        <div class="social-title">${escapeHtml(socialTitle || pageTitle)}</div>
+                        <div class="social-description">${escapeHtml(socialDescription || pageDescription || 'No description provided')}</div>
+                    </div>
+                `;
+
+                document.getElementById('previewSection').style.display = 'block';
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('pageTitle').value = '';
+            document.getElementById('pageUrl').value = '';
+            document.getElementById('pageDescription').value = '';
+            document.getElementById('keywords').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('socialTitle').value = '';
+            document.getElementById('socialDescription').value = '';
+            document.getElementById('socialImage').value = '';
+            
+            document.getElementById('outputSection').style.display = 'none';
+            document.getElementById('previewSection').style.display = 'none';
+            
+            showNotification('Form cleared successfully', 'success');
+        }
+
+        function copyToClipboard() {
+            const metaTags = document.getElementById('metaTagsOutput').textContent;
+            if (!metaTags.trim()) {
+                showNotification('No meta tags to copy', 'error');
+                return;
+            }
+
+            navigator.clipboard.writeText(metaTags).then(function() {
+                showNotification('Meta tags copied to clipboard!', 'success');
+            }).catch(function() {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = metaTags;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Meta tags copied to clipboard!', 'success');
+            });
+        }
+
+        function saveToHistory(title, description, metaTags) {
+            const history = JSON.parse(localStorage.getItem('metaHistory') || '[]');
+            const historyItem = {
+                title: title,
+                description: description,
+                metaTags: metaTags,
+                timestamp: new Date().toISOString()
+            };
+
+            // Add to beginning of array
+            history.unshift(historyItem);
+
+            // Keep only last 10 items
+            if (history.length > 10) {
+                history.pop();
+            }
+
+            localStorage.setItem('metaHistory', JSON.stringify(history));
+            updateHistoryDisplay();
+        }
+
+        function loadHistory() {
+            updateHistoryDisplay();
+        }
+
+        function updateHistoryDisplay() {
+            const history = JSON.parse(localStorage.getItem('metaHistory') || '[]');
+            const container = document.getElementById('historyContainer');
+
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-muted">No generation history yet. Generate some meta tags to see it here.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => `
+                <div class="history-item" onclick="loadFromHistory(${index})">
+                    <div class="title">${escapeHtml(item.title)}</div>
+                    <div class="meta">
+                        ${escapeHtml(item.description.substring(0, 100) + (item.description.length > 100 ? '...' : ''))}<br>
+                        ${formatDate(item.timestamp)}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const history = JSON.parse(localStorage.getItem('metaHistory') || '[]');
+            if (history[index]) {
+                const item = history[index];
+                document.getElementById('pageTitle').value = item.title;
+                document.getElementById('pageDescription').value = item.description;
+                document.getElementById('metaTagsOutput').textContent = item.metaTags;
+                document.getElementById('outputSection').style.display = 'block';
+                updatePreview();
+                showNotification('Loaded from history!', 'success');
+            }
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('metaHistory');
+            updateHistoryDisplay();
+            showNotification('History cleared!', 'success');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        }
+
+        function showNotification(message, type = 'info') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type === 'error' ? 'danger' : type === 'success' ? 'success' : 'info'} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

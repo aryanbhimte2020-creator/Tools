@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator - Multi-Tools Hub</title>
+    <meta name="description" content="Free online calculator with scientific functions. Perform basic and advanced calculations with history tracking.">
+    <meta name="keywords" content="calculator, scientific calculator, online calculator, math tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .calculator-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            color: white;
+        }
+        
+        .calculator-display {
+            background: rgba(0,0,0,0.8);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .display-expression {
+            font-size: 1.2rem;
+            color: #aaa;
+            margin-bottom: 0.5rem;
+            min-height: 1.5rem;
+        }
+        
+        .display-result {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .calc-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: #333;
+        }
+        
+        .calc-btn:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .calc-btn.operator {
+            background: rgba(255,193,7,0.9);
+            color: #333;
+        }
+        
+        .calc-btn.equals {
+            background: rgba(40,167,69,0.9);
+            color: white;
+        }
+        
+        .calc-btn.clear {
+            background: rgba(220,53,69,0.9);
+            color: white;
+        }
+        
+        .calc-btn.function {
+            background: rgba(23,162,184,0.9);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .scientific-buttons {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .mode-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .mode-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            margin: 0.25rem;
+            transition: all 0.3s;
+        }
+        
+        .mode-btn.active {
+            background: rgba(255,255,255,0.2);
+            font-weight: bold;
+        }
+        
+        .mode-btn:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .calculation-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            background: #f8f9fa;
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .history-item:hover {
+            background: #e9ecef;
+        }
+        
+        .history-expression {
+            color: #666;
+            font-style: italic;
+        }
+        
+        .history-result {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .memory-display {
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .memory-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.25rem;
+        }
+        
+        .memory-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .memory-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Calculator</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="calculator-container">
+                        <h2 class="text-center mb-4">
+                            <i class="fas fa-calculator me-2"></i>
+                            Calculator
+                        </h2>
+                        
+                        <!-- Mode Toggle -->
+                        <div class="mode-toggle">
+                            <button class="mode-btn active" onclick="switchMode('basic')">Basic</button>
+                            <button class="mode-btn" onclick="switchMode('scientific')">Scientific</button>
+                            <button class="mode-btn" onclick="switchMode('programmer')">Programmer</button>
+                        </div>
+                        
+                        <!-- Calculator Display -->
+                        <div class="calculator-display">
+                            <div class="display-expression" id="expression"></div>
+                            <div class="display-result" id="result">0</div>
+                        </div>
+                        
+                        <!-- Memory Display -->
+                        <div class="memory-display" id="memoryDisplay" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <strong>Memory</strong>
+                                <button class="memory-btn" onclick="clearMemory()">Clear All</button>
+                            </div>
+                            <div id="memoryItems"></div>
+                        </div>
+                        
+                        <!-- Scientific Buttons (hidden by default) -->
+                        <div class="scientific-buttons" id="scientificButtons" style="display: none;">
+                            <button class="calc-btn function" onclick="calculateFunction('sin')">sin</button>
+                            <button class="calc-btn function" onclick="calculateFunction('cos')">cos</button>
+                            <button class="calc-btn function" onclick="calculateFunction('tan')">tan</button>
+                            <button class="calc-btn function" onclick="calculateFunction('log')">log</button>
+                            <button class="calc-btn function" onclick="calculateFunction('ln')">ln</button>
+                            <button class="calc-btn function" onclick="calculateFunction('sqrt')">√</button>
+                            <button class="calc-btn function" onclick="calculateFunction('pow')">x²</button>
+                            <button class="calc-btn function" onclick="calculateFunction('factorial')">n!</button>
+                            <button class="calc-btn function" onclick="calculateFunction('pi')">π</button>
+                            <button class="calc-btn function" onclick="calculateFunction('e')">e</button>
+                        </div>
+                        
+                        <!-- Calculator Buttons -->
+                        <div class="calculator-buttons">
+                            <button class="calc-btn clear" onclick="clearAll()">C</button>
+                            <button class="calc-btn clear" onclick="clearEntry()">CE</button>
+                            <button class="calc-btn function" onclick="backspace()">⌫</button>
+                            <button class="calc-btn operator" onclick="addOperator('/')">÷</button>
+                            
+                            <button class="calc-btn" onclick="addNumber('7')">7</button>
+                            <button class="calc-btn" onclick="addNumber('8')">8</button>
+                            <button class="calc-btn" onclick="addNumber('9')">9</button>
+                            <button class="calc-btn operator" onclick="addOperator('*')">×</button>
+                            
+                            <button class="calc-btn" onclick="addNumber('4')">4</button>
+                            <button class="calc-btn" onclick="addNumber('5')">5</button>
+                            <button class="calc-btn" onclick="addNumber('6')">6</button>
+                            <button class="calc-btn operator" onclick="addOperator('-')">−</button>
+                            
+                            <button class="calc-btn" onclick="addNumber('1')">1</button>
+                            <button class="calc-btn" onclick="addNumber('2')">2</button>
+                            <button class="calc-btn" onclick="addNumber('3')">3</button>
+                            <button class="calc-btn operator" onclick="addOperator('+')">+</button>
+                            
+                            <button class="calc-btn" onclick="addNumber('0')">0</button>
+                            <button class="calc-btn" onclick="addDecimal()">.</button>
+                            <button class="calc-btn function" onclick="toggleSign()">±</button>
+                            <button class="calc-btn equals" onclick="calculate()">=</button>
+                        </div>
+                        
+                        <!-- Memory Buttons -->
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-light" onclick="memoryStore()">MS</button>
+                            <button class="btn btn-outline-light" onclick="memoryRecall()">MR</button>
+                            <button class="btn btn-outline-light" onclick="memoryAdd()">M+</button>
+                            <button class="btn btn-outline-light" onclick="memorySubtract()">M-</button>
+                            <button class="btn btn-outline-light" onclick="toggleMemoryDisplay()">Memory</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Calculation History -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history me-2"></i>Calculation History</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="calculation-history" id="calculationHistory">
+                                <!-- History items will be displayed here -->
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary mt-2" onclick="clearHistory()">
+                                <i class="fas fa-trash me-1"></i>Clear History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for free online tools. Convert, calculate, and create with ease.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Calculator JavaScript
+        let currentMode = 'basic';
+        let expression = '';
+        let result = '0';
+        let calculationHistory = [];
+        let memory = {};
+        let memoryCounter = 0;
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCalculationHistory();
+            updateDisplay();
+        });
+
+        // Switch calculator mode
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // Update active mode button
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide scientific buttons
+            const scientificButtons = document.getElementById('scientificButtons');
+            if (mode === 'scientific') {
+                scientificButtons.style.display = 'grid';
+            } else {
+                scientificButtons.style.display = 'none';
+            }
+            
+            showNotification(`Switched to ${mode} mode`, 'info');
+        }
+
+        // Add number to expression
+        function addNumber(num) {
+            if (result !== '0' && expression === '') {
+                expression = result;
+            }
+            expression += num;
+            updateDisplay();
+        }
+
+        // Add operator to expression
+        function addOperator(operator) {
+            if (result !== '0' && expression === '') {
+                expression = result;
+            }
+            if (expression !== '' && !'+-*/'.includes(expression.slice(-1))) {
+                expression += operator;
+                updateDisplay();
+            }
+        }
+
+        // Add decimal point
+        function addDecimal() {
+            if (result !== '0' && expression === '') {
+                expression = result;
+            }
+            if (expression === '') {
+                expression = '0.';
+            } else if (!expression.includes('.') || expression.split(/[\+\-\*\/]/).pop().includes('.')) {
+                // Check if current number already has decimal
+                const parts = expression.split(/[\+\-\*\/]/);
+                const lastPart = parts[parts.length - 1];
+                if (!lastPart.includes('.')) {
+                    expression += '.';
+                }
+            }
+            updateDisplay();
+        }
+
+        // Toggle sign
+        function toggleSign() {
+            if (result !== '0' && expression === '') {
+                expression = result;
+            }
+            if (expression !== '') {
+                if (expression.startsWith('-')) {
+                    expression = expression.substring(1);
+                } else {
+                    expression = '-' + expression;
+                }
+                updateDisplay();
+            }
+        }
+
+        // Calculate function
+        function calculateFunction(func) {
+            let value = parseFloat(result);
+            
+            switch (func) {
+                case 'sin':
+                    value = Math.sin(value * Math.PI / 180);
+                    break;
+                case 'cos':
+                    value = Math.cos(value * Math.PI / 180);
+                    break;
+                case 'tan':
+                    value = Math.tan(value * Math.PI / 180);
+                    break;
+                case 'log':
+                    value = Math.log10(value);
+                    break;
+                case 'ln':
+                    value = Math.log(value);
+                    break;
+                case 'sqrt':
+                    value = Math.sqrt(value);
+                    break;
+                case 'pow':
+                    value = Math.pow(value, 2);
+                    break;
+                case 'factorial':
+                    value = factorial(value);
+                    break;
+                case 'pi':
+                    value = Math.PI;
+                    break;
+                case 'e':
+                    value = Math.E;
+                    break;
+            }
+            
+            result = value.toString();
+            expression = '';
+            updateDisplay();
+        }
+
+        // Calculate factorial
+        function factorial(n) {
+            if (n < 0 || n !== Math.floor(n)) {
+                throw new Error('Invalid input for factorial');
+            }
+            if (n === 0 || n === 1) {
+                return 1;
+            }
+            let result = 1;
+            for (let i = 2; i <= n; i++) {
+                result *= i;
+            }
+            return result;
+        }
+
+        // Calculate result
+        function calculate() {
+            if (expression === '') {
+                return;
+            }
+            
+            try {
+                // Replace × with * and ÷ with /
+                let calcExpression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+                
+                // Evaluate expression
+                const calculatedResult = eval(calcExpression);
+                
+                // Add to history
+                const historyItem = {
+                    expression: expression,
+                    result: calculatedResult.toString(),
+                    timestamp: new Date().toLocaleString()
+                };
+                
+                calculationHistory.unshift(historyItem);
+                if (calculationHistory.length > 50) {
+                    calculationHistory.pop();
+                }
+                
+                saveCalculationHistory();
+                updateCalculationHistoryDisplay();
+                
+                result = calculatedResult.toString();
+                expression = '';
+                updateDisplay();
+                
+                showNotification('Calculation completed!', 'success');
+            } catch (error) {
+                showNotification('Invalid expression!', 'danger');
+            }
+        }
+
+        // Clear all
+        function clearAll() {
+            expression = '';
+            result = '0';
+            updateDisplay();
+        }
+
+        // Clear entry
+        function clearEntry() {
+            expression = '';
+            updateDisplay();
+        }
+
+        // Backspace
+        function backspace() {
+            if (expression !== '') {
+                expression = expression.slice(0, -1);
+                updateDisplay();
+            }
+        }
+
+        // Update display
+        function updateDisplay() {
+            document.getElementById('expression').textContent = expression;
+            document.getElementById('result').textContent = result;
+        }
+
+        // Memory functions
+        function memoryStore() {
+            const value = parseFloat(result);
+            const key = `M${++memoryCounter}`;
+            memory[key] = value;
+            updateMemoryDisplay();
+            showNotification(`Stored ${value} in ${key}`, 'success');
+        }
+
+        function memoryRecall() {
+            const keys = Object.keys(memory);
+            if (keys.length > 0) {
+                const lastKey = keys[keys.length - 1];
+                result = memory[lastKey].toString();
+                expression = '';
+                updateDisplay();
+                showNotification(`Recalled ${memory[lastKey]} from ${lastKey}`, 'info');
+            }
+        }
+
+        function memoryAdd() {
+            const value = parseFloat(result);
+            const keys = Object.keys(memory);
+            if (keys.length > 0) {
+                const lastKey = keys[keys.length - 1];
+                memory[lastKey] += value;
+                updateMemoryDisplay();
+                showNotification(`Added ${value} to ${lastKey}`, 'success');
+            }
+        }
+
+        function memorySubtract() {
+            const value = parseFloat(result);
+            const keys = Object.keys(memory);
+            if (keys.length > 0) {
+                const lastKey = keys[keys.length - 1];
+                memory[lastKey] -= value;
+                updateMemoryDisplay();
+                showNotification(`Subtracted ${value} from ${lastKey}`, 'success');
+            }
+        }
+
+        function clearMemory() {
+            memory = {};
+            memoryCounter = 0;
+            updateMemoryDisplay();
+            showNotification('Memory cleared!', 'info');
+        }
+
+        function toggleMemoryDisplay() {
+            const memoryDisplay = document.getElementById('memoryDisplay');
+            if (memoryDisplay.style.display === 'none') {
+                memoryDisplay.style.display = 'block';
+                updateMemoryDisplay();
+            } else {
+                memoryDisplay.style.display = 'none';
+            }
+        }
+
+        function updateMemoryDisplay() {
+            const memoryItems = document.getElementById('memoryItems');
+            memoryItems.innerHTML = '';
+            
+            Object.keys(memory).forEach(key => {
+                const memoryItem = document.createElement('div');
+                memoryItem.className = 'memory-item';
+                memoryItem.innerHTML = `
+                    <span>${key}: ${memory[key]}</span>
+                    <div>
+                        <button class="memory-btn" onclick="recallMemory('${key}')">R</button>
+                        <button class="memory-btn" onclick="deleteMemory('${key}')">D</button>
+                    </div>
+                `;
+                memoryItems.appendChild(memoryItem);
+            });
+        }
+
+        function recallMemory(key) {
+            result = memory[key].toString();
+            expression = '';
+            updateDisplay();
+            showNotification(`Recalled ${memory[key]} from ${key}`, 'info');
+        }
+
+        function deleteMemory(key) {
+            delete memory[key];
+            updateMemoryDisplay();
+            showNotification(`Deleted ${key}`, 'info');
+        }
+
+        // History functions
+        function saveCalculationHistory() {
+            localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+        }
+
+        function loadCalculationHistory() {
+            const saved = localStorage.getItem('calculationHistory');
+            if (saved) {
+                calculationHistory = JSON.parse(saved);
+                updateCalculationHistoryDisplay();
+            }
+        }
+
+        function updateCalculationHistoryDisplay() {
+            const history = document.getElementById('calculationHistory');
+            history.innerHTML = '';
+            
+            calculationHistory.forEach(item => {
+                const historyItem = document.createElement('div');
+                historyItem.className = 'history-item';
+                historyItem.innerHTML = `
+                    <div class="history-expression">${item.expression}</div>
+                    <div class="history-result">= ${item.result}</div>
+                    <small class="text-muted">${item.timestamp}</small>
+                `;
+                historyItem.onclick = () => {
+                    expression = item.expression;
+                    result = item.result;
+                    updateDisplay();
+                };
+                
+                history.appendChild(historyItem);
+            });
+        }
+
+        function clearHistory() {
+            calculationHistory = [];
+            saveCalculationHistory();
+            updateCalculationHistoryDisplay();
+            showNotification('Calculation history cleared!', 'info');
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Keyboard support
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            
+            if (key >= '0' && key <= '9') {
+                addNumber(key);
+            } else if (key === '.') {
+                addDecimal();
+            } else if (key === '+') {
+                addOperator('+');
+            } else if (key === '-') {
+                addOperator('-');
+            } else if (key === '*') {
+                addOperator('*');
+            } else if (key === '/') {
+                addOperator('/');
+            } else if (key === 'Enter' || key === '=') {
+                calculate();
+            } else if (key === 'Escape') {
+                clearAll();
+            } else if (key === 'Backspace') {
+                backspace();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Picker - Multi-Tools Hub</title>
+    <meta name="description" content="Free online color picker and palette generator. Pick colors, generate palettes, and convert between color formats.">
+    <meta name="keywords" content="color picker, color palette, color generator, hex colors, rgb colors, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .color-picker-container {
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .color-display {
+            width: 100%;
+            height: 200px;
+            border-radius: 15px;
+            border: 3px solid #fff;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .color-info {
+            background: rgba(255,255,255,0.9);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+        }
+        
+        .color-value {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .palette-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .palette-color {
+            height: 60px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .palette-color:hover {
+            transform: scale(1.05);
+        }
+        
+        .color-slider {
+            margin: 1rem 0;
+        }
+        
+        .slider-group {
+            margin-bottom: 1rem;
+        }
+        
+        .slider-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .color-history {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .history-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            cursor: pointer;
+            margin: 0.25rem;
+        }
+        
+        .color-harmony {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .harmony-color {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            border: 2px solid #fff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (embedded directly) -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Color Picker</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="color-picker-container">
+                        <h2 class="text-center mb-4">
+                            <i class="fas fa-palette me-2"></i>
+                            Color Picker & Palette Generator
+                        </h2>
+                        
+                        <!-- Color Display -->
+                        <div class="color-display" id="colorDisplay">
+                            <div class="position-absolute top-0 end-0 m-3">
+                                <button class="btn btn-light btn-sm" onclick="copyColor()">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Information -->
+                        <div class="color-info">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <label class="slider-label">HEX</label>
+                                    <div class="color-value" id="hexValue">#FF6B6B</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="slider-label">RGB</label>
+                                    <div class="color-value" id="rgbValue">255, 107, 107</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="slider-label">HSL</label>
+                                    <div class="color-value" id="hslValue">0°, 100%, 71%</div>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="slider-label">CMYK</label>
+                                    <div class="color-value" id="cmykValue">0%, 58%, 58%, 0%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Color Sliders -->
+                        <div class="color-slider">
+                            <div class="slider-group">
+                                <label class="slider-label">Red</label>
+                                <input type="range" class="form-range" id="redSlider" min="0" max="255" value="255">
+                                <div class="d-flex justify-content-between">
+                                    <small>0</small>
+                                    <small id="redValue">255</small>
+                                    <small>255</small>
+                                </div>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label class="slider-label">Green</label>
+                                <input type="range" class="form-range" id="greenSlider" min="0" max="255" value="107">
+                                <div class="d-flex justify-content-between">
+                                    <small>0</small>
+                                    <small id="greenValue">107</small>
+                                    <small>255</small>
+                                </div>
+                            </div>
+                            
+                            <div class="slider-group">
+                                <label class="slider-label">Blue</label>
+                                <input type="range" class="form-range" id="blueSlider" min="0" max="255" value="107">
+                                <div class="d-flex justify-content-between">
+                                    <small>0</small>
+                                    <small id="blueValue">107</small>
+                                    <small>255</small>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Action Buttons -->
+                        <div class="d-flex gap-2 flex-wrap">
+                            <button class="btn btn-primary" onclick="generateRandomColor()">
+                                <i class="fas fa-random me-2"></i>Random Color
+                            </button>
+                            <button class="btn btn-success" onclick="addToHistory()">
+                                <i class="fas fa-save me-2"></i>Save to History
+                            </button>
+                            <button class="btn btn-info" onclick="generatePalette()">
+                                <i class="fas fa-palette me-2"></i>Generate Palette
+                            </button>
+                            <button class="btn btn-warning" onclick="clearHistory()">
+                                <i class="fas fa-trash me-2"></i>Clear History
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Color Harmony -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5><i class="fas fa-magic me-2"></i>Color Harmony</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="color-harmony" id="colorHarmony">
+                                <!-- Harmony colors will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Generated Palette -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5><i class="fas fa-palette me-2"></i>Generated Palette</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="palette-container" id="generatedPalette">
+                                <!-- Palette colors will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Color History -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history me-2"></i>Color History</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="color-history" id="colorHistory">
+                                <!-- History colors will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer (embedded directly) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for free online tools. Convert, calculate, and create with ease.</p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="text-center">
+                <p>&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Color Picker JavaScript
+        let currentColor = { r: 255, g: 107, b: 107 };
+        let colorHistory = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateColor();
+            loadColorHistory();
+            generateColorHarmony();
+        });
+
+        // Update color from sliders
+        function updateColor() {
+            currentColor.r = parseInt(document.getElementById('redSlider').value);
+            currentColor.g = parseInt(document.getElementById('greenSlider').value);
+            currentColor.b = parseInt(document.getElementById('blueSlider').value);
+            
+            updateColorDisplay();
+            updateColorValues();
+            generateColorHarmony();
+        }
+
+        // Update color display
+        function updateColorDisplay() {
+            const display = document.getElementById('colorDisplay');
+            display.style.backgroundColor = `rgb(${currentColor.r}, ${currentColor.g}, ${currentColor.b})`;
+        }
+
+        // Update color values
+        function updateColorValues() {
+            document.getElementById('redValue').textContent = currentColor.r;
+            document.getElementById('greenValue').textContent = currentColor.g;
+            document.getElementById('blueValue').textContent = currentColor.b;
+            
+            // Update HEX
+            const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+            document.getElementById('hexValue').textContent = hex;
+            
+            // Update RGB
+            document.getElementById('rgbValue').textContent = `${currentColor.r}, ${currentColor.g}, ${currentColor.b}`;
+            
+            // Update HSL
+            const hsl = rgbToHsl(currentColor.r, currentColor.g, currentColor.b);
+            document.getElementById('hslValue').textContent = `${Math.round(hsl.h)}°, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%`;
+            
+            // Update CMYK
+            const cmyk = rgbToCmyk(currentColor.r, currentColor.g, currentColor.b);
+            document.getElementById('cmykValue').textContent = `${Math.round(cmyk.c)}%, ${Math.round(cmyk.m)}%, ${Math.round(cmyk.y)}%, ${Math.round(cmyk.k)}%`;
+        }
+
+        // Convert RGB to HEX
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
+        // Convert RGB to HSL
+        function rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            
+            return { h: h * 360, s: s * 100, l: l * 100 };
+        }
+
+        // Convert RGB to CMYK
+        function rgbToCmyk(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+            
+            const k = 1 - Math.max(r, g, b);
+            const c = (1 - r - k) / (1 - k);
+            const m = (1 - g - k) / (1 - k);
+            const y = (1 - b - k) / (1 - k);
+            
+            return {
+                c: isNaN(c) ? 0 : c * 100,
+                m: isNaN(m) ? 0 : m * 100,
+                y: isNaN(y) ? 0 : y * 100,
+                k: k * 100
+            };
+        }
+
+        // Generate random color
+        function generateRandomColor() {
+            currentColor.r = Math.floor(Math.random() * 256);
+            currentColor.g = Math.floor(Math.random() * 256);
+            currentColor.b = Math.floor(Math.random() * 256);
+            
+            document.getElementById('redSlider').value = currentColor.r;
+            document.getElementById('greenSlider').value = currentColor.g;
+            document.getElementById('blueSlider').value = currentColor.b;
+            
+            updateColor();
+            showNotification('Random color generated!', 'success');
+        }
+
+        // Generate color harmony
+        function generateColorHarmony() {
+            const harmony = document.getElementById('colorHarmony');
+            harmony.innerHTML = '';
+            
+            const harmonies = [
+                { name: 'Complementary', offset: 180 },
+                { name: 'Triadic 1', offset: 120 },
+                { name: 'Triadic 2', offset: 240 },
+                { name: 'Split 1', offset: 150 },
+                { name: 'Split 2', offset: 210 }
+            ];
+            
+            const hsl = rgbToHsl(currentColor.r, currentColor.g, currentColor.b);
+            
+            harmonies.forEach(harmonyType => {
+                const newHue = (hsl.h + harmonyType.offset) % 360;
+                const newColor = hslToRgb(newHue, hsl.s, hsl.l);
+                
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'harmony-color';
+                colorDiv.style.backgroundColor = `rgb(${newColor.r}, ${newColor.g}, ${newColor.b})`;
+                colorDiv.title = harmonyType.name;
+                colorDiv.onclick = () => selectColor(newColor.r, newColor.g, newColor.b);
+                
+                harmony.appendChild(colorDiv);
+            });
+        }
+
+        // Convert HSL to RGB
+        function hslToRgb(h, s, l) {
+            h /= 360;
+            s /= 100;
+            l /= 100;
+            
+            const hue2rgb = (p, q, t) => {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q - p) * 6 * t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            };
+            
+            let r, g, b;
+            
+            if (s === 0) {
+                r = g = b = l;
+            } else {
+                const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+                const p = 2 * l - q;
+                r = hue2rgb(p, q, h + 1/3);
+                g = hue2rgb(p, q, h);
+                b = hue2rgb(p, q, h - 1/3);
+            }
+            
+            return {
+                r: Math.round(r * 255),
+                g: Math.round(g * 255),
+                b: Math.round(b * 255)
+            };
+        }
+
+        // Generate palette
+        function generatePalette() {
+            const palette = document.getElementById('generatedPalette');
+            palette.innerHTML = '';
+            
+            const baseHsl = rgbToHsl(currentColor.r, currentColor.g, currentColor.b);
+            const paletteColors = [];
+            
+            // Generate variations
+            for (let i = 0; i < 8; i++) {
+                let newHue, newSat, newLight;
+                
+                switch (i) {
+                    case 0: // Original
+                        newHue = baseHsl.h;
+                        newSat = baseHsl.s;
+                        newLight = baseHsl.l;
+                        break;
+                    case 1: // Lighter
+                        newHue = baseHsl.h;
+                        newSat = baseHsl.s;
+                        newLight = Math.min(100, baseHsl.l + 20);
+                        break;
+                    case 2: // Darker
+                        newHue = baseHsl.h;
+                        newSat = baseHsl.s;
+                        newLight = Math.max(0, baseHsl.l - 20);
+                        break;
+                    case 3: // More saturated
+                        newHue = baseHsl.h;
+                        newSat = Math.min(100, baseHsl.s + 20);
+                        newLight = baseHsl.l;
+                        break;
+                    case 4: // Less saturated
+                        newHue = baseHsl.h;
+                        newSat = Math.max(0, baseHsl.s - 20);
+                        newLight = baseHsl.l;
+                        break;
+                    case 5: // Complementary
+                        newHue = (baseHsl.h + 180) % 360;
+                        newSat = baseHsl.s;
+                        newLight = baseHsl.l;
+                        break;
+                    case 6: // Analogous 1
+                        newHue = (baseHsl.h + 30) % 360;
+                        newSat = baseHsl.s;
+                        newLight = baseHsl.l;
+                        break;
+                    case 7: // Analogous 2
+                        newHue = (baseHsl.h - 30 + 360) % 360;
+                        newSat = baseHsl.s;
+                        newLight = baseHsl.l;
+                        break;
+                }
+                
+                const newRgb = hslToRgb(newHue, newSat, newLight);
+                paletteColors.push(newRgb);
+            }
+            
+            paletteColors.forEach(color => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'palette-color';
+                colorDiv.style.backgroundColor = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                colorDiv.onclick = () => selectColor(color.r, color.g, color.b);
+                
+                palette.appendChild(colorDiv);
+            });
+            
+            showNotification('Color palette generated!', 'success');
+        }
+
+        // Select color
+        function selectColor(r, g, b) {
+            currentColor = { r, g, b };
+            
+            document.getElementById('redSlider').value = r;
+            document.getElementById('greenSlider').value = g;
+            document.getElementById('blueSlider').value = b;
+            
+            updateColor();
+            showNotification('Color selected!', 'info');
+        }
+
+        // Add to history
+        function addToHistory() {
+            const colorHex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+            
+            if (!colorHistory.includes(colorHex)) {
+                colorHistory.unshift(colorHex);
+                if (colorHistory.length > 20) {
+                    colorHistory.pop();
+                }
+                saveColorHistory();
+                updateColorHistoryDisplay();
+                showNotification('Color added to history!', 'success');
+            } else {
+                showNotification('Color already in history!', 'warning');
+            }
+        }
+
+        // Clear history
+        function clearHistory() {
+            colorHistory = [];
+            saveColorHistory();
+            updateColorHistoryDisplay();
+            showNotification('Color history cleared!', 'info');
+        }
+
+        // Save color history
+        function saveColorHistory() {
+            localStorage.setItem('colorHistory', JSON.stringify(colorHistory));
+        }
+
+        // Load color history
+        function loadColorHistory() {
+            const saved = localStorage.getItem('colorHistory');
+            if (saved) {
+                colorHistory = JSON.parse(saved);
+                updateColorHistoryDisplay();
+            }
+        }
+
+        // Update color history display
+        function updateColorHistoryDisplay() {
+            const history = document.getElementById('colorHistory');
+            history.innerHTML = '';
+            
+            colorHistory.forEach(hex => {
+                const colorDiv = document.createElement('div');
+                colorDiv.className = 'history-color d-inline-block';
+                colorDiv.style.backgroundColor = hex;
+                colorDiv.title = hex;
+                colorDiv.onclick = () => {
+                    const rgb = hexToRgb(hex);
+                    selectColor(rgb.r, rgb.g, rgb.b);
+                };
+                
+                history.appendChild(colorDiv);
+            });
+        }
+
+        // Convert HEX to RGB
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // Copy color
+        function copyColor() {
+            const hex = rgbToHex(currentColor.r, currentColor.g, currentColor.b);
+            navigator.clipboard.writeText(hex).then(() => {
+                showNotification('Color copied to clipboard!', 'success');
+            });
+        }
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            notification.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Event listeners
+        document.getElementById('redSlider').addEventListener('input', updateColor);
+        document.getElementById('greenSlider').addEventListener('input', updateColor);
+        document.getElementById('blueSlider').addEventListener('input', updateColor);
+    </script>
+</body>
+</html>

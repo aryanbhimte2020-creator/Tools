@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Counter - Multi-Tools Hub</title>
+    <meta name="description" content="Free online word counter tool. Count words, characters, sentences, and paragraphs in your text.">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header will be loaded dynamically -->
+    <div id="header-placeholder"></div>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="index.html#text-tools">Text Tools</a></li>
+                <li class="breadcrumb-item active">Word Counter</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="tool-header">
+                <h1><i class="fas fa-calculator text-primary me-3"></i>Word Counter</h1>
+                <p class="tool-description">Count words, characters, sentences, and paragraphs in your text. Perfect for essays, articles, and content writing.</p>
+            </div>
+
+            <!-- Ad Section -->
+            <div class="ad-banner text-center p-3 bg-light rounded mb-4">
+                <p class="text-muted mb-0">Advertisement Space</p>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <label for="textInput" class="form-label">Enter your text:</label>
+                        <textarea id="textInput" class="form-control" rows="15" placeholder="Paste or type your text here..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button id="clearBtn" class="btn btn-secondary w-100 mb-3">
+                                <i class="fas fa-trash me-2"></i>Clear Text
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <button id="copyBtn" class="btn btn-info w-100 mb-3">
+                                <i class="fas fa-copy me-2"></i>Copy Text
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="result-container">
+                        <h4><i class="fas fa-chart-bar text-primary me-2"></i>Statistics</h4>
+                        
+                        <div class="row text-center">
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-primary text-white p-3 rounded">
+                                    <h3 id="wordCount">0</h3>
+                                    <small>Words</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-success text-white p-3 rounded">
+                                    <h3 id="charCount">0</h3>
+                                    <small>Characters</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-warning text-dark p-3 rounded">
+                                    <h3 id="charNoSpaceCount">0</h3>
+                                    <small>Chars (no spaces)</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-info text-white p-3 rounded">
+                                    <h3 id="sentenceCount">0</h3>
+                                    <small>Sentences</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-secondary text-white p-3 rounded">
+                                    <h3 id="paragraphCount">0</h3>
+                                    <small>Paragraphs</small>
+                                </div>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <div class="stat-card bg-danger text-white p-3 rounded">
+                                    <h3 id="readingTime">0</h3>
+                                    <small>Min read</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <h5>Reading Level:</h5>
+                            <div id="readingLevel" class="badge bg-success fs-6">Beginner</div>
+                        </div>
+                    </div>
+
+                    <!-- Ad Section -->
+                    <div class="ad-banner text-center p-3 bg-light rounded mt-4">
+                        <p class="text-muted mb-0">Advertisement Space</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Analysis -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="result-container">
+                        <h4><i class="fas fa-search text-primary me-2"></i>Detailed Analysis</h4>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5>Most Common Words:</h5>
+                                <div id="commonWords" class="mb-3">
+                                    <p class="text-muted">Start typing to see word frequency...</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Text Summary:</h5>
+                                <div id="textSummary" class="mb-3">
+                                    <p class="text-muted">Analysis will appear here...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer will be loaded dynamically -->
+    <div id="footer-placeholder"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/word-counter.js"></script>
+</body>
+</html>

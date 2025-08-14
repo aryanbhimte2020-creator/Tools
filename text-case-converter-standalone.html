@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Case Converter - Multi-Tools Hub</title>
+    <meta name="description" content="Free online text case converter. Convert text between uppercase, lowercase, title case, camel case, and more.">
+    <meta name="keywords" content="text case converter, uppercase, lowercase, title case, camel case, online tools">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        .case-preview {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            font-family: 'Courier New', monospace;
+            min-height: 60px;
+            word-break: break-all;
+        }
+        .case-button {
+            margin: 0.25rem;
+            min-width: 120px;
+        }
+        .text-stats {
+            background-color: #e9ecef;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index-standalone.html">
+                <i class="fas fa-tools me-2"></i>
+                Multi-Tools Hub
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index-standalone.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="word-counter-standalone.html">Word Counter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="json-formatter-standalone.html">JSON Formatter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bmi-calculator-standalone.html">BMI Calculator</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="password-generator-standalone.html">Password Generator</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index-standalone.html">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Text Case Converter</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Tool Container -->
+    <div class="container">
+        <div class="tool-container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h1 class="tool-title">
+                        <i class="fas fa-font text-primary"></i>
+                        Text Case Converter
+                    </h1>
+                    <p class="tool-description">Convert text between different cases including uppercase, lowercase, title case, camel case, snake case, and more.</p>
+                    
+                    <!-- Text Input -->
+                    <div class="mb-4">
+                        <label for="textInput" class="form-label">Enter your text:</label>
+                        <textarea id="textInput" class="form-control" rows="6" placeholder="Type or paste your text here..."></textarea>
+                    </div>
+                    
+                    <!-- Case Conversion Buttons -->
+                    <div class="mb-4">
+                        <h5><i class="fas fa-magic text-primary"></i> Convert to:</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('uppercase')">
+                                    <i class="fas fa-arrow-up"></i> UPPERCASE
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('lowercase')">
+                                    <i class="fas fa-arrow-down"></i> lowercase
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('title')">
+                                    <i class="fas fa-heading"></i> Title Case
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('sentence')">
+                                    <i class="fas fa-paragraph"></i> Sentence case
+                                </button>
+                            </div>
+                            <div class="col-md-6">
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('camel')">
+                                    <i class="fas fa-camel"></i> camelCase
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('pascal')">
+                                    <i class="fas fa-crown"></i> PascalCase
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('snake')">
+                                    <i class="fas fa-minus"></i> snake_case
+                                </button>
+                                <button class="btn btn-outline-primary case-button" onclick="convertCase('kebab')">
+                                    <i class="fas fa-minus"></i> kebab-case
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="mb-4">
+                        <button class="btn btn-primary me-2" onclick="copyText()">
+                            <i class="fas fa-copy"></i> Copy Text
+                        </button>
+                        <button class="btn btn-success me-2" onclick="downloadText()">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="btn btn-danger me-2" onclick="clearText()">
+                            <i class="fas fa-trash"></i> Clear
+                        </button>
+                        <button class="btn btn-info" onclick="loadSample()">
+                            <i class="fas fa-lightbulb"></i> Load Sample
+                        </button>
+                    </div>
+                    
+                    <!-- Text Statistics -->
+                    <div class="text-stats" id="textStats" style="display: none;">
+                        <h5><i class="fas fa-chart-bar text-info"></i> Text Statistics</h5>
+                        <div id="statsContent"></div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <!-- Case Preview -->
+                    <div class="case-preview" id="casePreview">
+                        <strong>Preview:</strong><br>
+                        <span class="text-muted">Enter text to see preview...</span>
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-bolt text-warning"></i> Quick Actions</h5>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="invertCase()">
+                            <i class="fas fa-exchange-alt"></i> Invert Case
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="alternateCase()">
+                            <i class="fas fa-random"></i> aLtErNaTe
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="removeSpaces()">
+                            <i class="fas fa-compress"></i> Remove Spaces
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm me-2 mb-2" onclick="reverseText()">
+                            <i class="fas fa-undo"></i> Reverse Text
+                        </button>
+                    </div>
+                    
+                    <!-- Case Examples -->
+                    <div class="mt-4">
+                        <h5><i class="fas fa-info-circle text-info"></i> Case Examples</h5>
+                        <div class="small">
+                            <strong>UPPERCASE:</strong> HELLO WORLD<br>
+                            <strong>lowercase:</strong> hello world<br>
+                            <strong>Title Case:</strong> Hello World<br>
+                            <strong>Sentence case:</strong> Hello world<br>
+                            <strong>camelCase:</strong> helloWorld<br>
+                            <strong>PascalCase:</strong> HelloWorld<br>
+                            <strong>snake_case:</strong> hello_world<br>
+                            <strong>kebab-case:</strong> hello-world
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Section -->
+    <div class="container mt-4">
+        <div class="ad-banner text-center p-3 bg-light rounded">
+            <p class="text-muted mb-0">Advertisement Space</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-tools me-2"></i>Multi-Tools Hub</h5>
+                    <p>Your one-stop destination for 100+ free online tools. From image converters to calculators, we've got everything you need.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="index-standalone.html">Home</a></li>
+                        <li><a href="word-counter-standalone.html">Word Counter</a></li>
+                        <li><a href="json-formatter-standalone.html">JSON Formatter</a></li>
+                        <li><a href="bmi-calculator-standalone.html">BMI Calculator</a></li>
+                        <li><a href="password-generator-standalone.html">Password Generator</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>Contact Info</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i>support@multitoolshub.com</li>
+                        <li><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</li>
+                        <li><i class="fas fa-map-marker-alt me-2"></i>123 Tools Street, Web City</li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0">&copy; 2024 Multi-Tools Hub. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="me-3">Privacy Policy</a>
+                    <a href="#" class="me-3">Terms of Service</a>
+                    <a href="#">Cookie Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Standalone Text Case Converter
+        document.addEventListener('DOMContentLoaded', function() {
+            const textInput = document.getElementById('textInput');
+            const casePreview = document.getElementById('casePreview');
+            const textStats = document.getElementById('textStats');
+            const statsContent = document.getElementById('statsContent');
+
+            // Initialize
+            initializeTextCaseConverter();
+
+            function initializeTextCaseConverter() {
+                // Add event listeners
+                textInput.addEventListener('input', updatePreview);
+                textInput.addEventListener('input', updateStats);
+            }
+
+            function updatePreview() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    casePreview.innerHTML = '<strong>Preview:</strong><br><span class="text-muted">Enter text to see preview...</span>';
+                    return;
+                }
+
+                const preview = `
+                    <strong>Preview:</strong><br>
+                    <strong>Original:</strong> ${text}<br>
+                    <strong>UPPERCASE:</strong> ${text.toUpperCase()}<br>
+                    <strong>lowercase:</strong> ${text.toLowerCase()}<br>
+                    <strong>Title Case:</strong> ${toTitleCase(text)}<br>
+                    <strong>camelCase:</strong> ${toCamelCase(text)}
+                `;
+                casePreview.innerHTML = preview;
+            }
+
+            function updateStats() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    textStats.style.display = 'none';
+                    return;
+                }
+
+                const stats = {
+                    characters: text.length,
+                    charactersNoSpaces: text.replace(/\s/g, '').length,
+                    words: text.trim().split(/\s+/).length,
+                    lines: text.split('\n').length,
+                    uppercase: (text.match(/[A-Z]/g) || []).length,
+                    lowercase: (text.match(/[a-z]/g) || []).length,
+                    numbers: (text.match(/[0-9]/g) || []).length,
+                    spaces: (text.match(/\s/g) || []).length
+                };
+
+                statsContent.innerHTML = `
+                    <div class="row">
+                        <div class="col-6">
+                            <strong>Characters:</strong> ${stats.characters}<br>
+                            <strong>No Spaces:</strong> ${stats.charactersNoSpaces}<br>
+                            <strong>Words:</strong> ${stats.words}<br>
+                            <strong>Lines:</strong> ${stats.lines}
+                        </div>
+                        <div class="col-6">
+                            <strong>Uppercase:</strong> ${stats.uppercase}<br>
+                            <strong>Lowercase:</strong> ${stats.lowercase}<br>
+                            <strong>Numbers:</strong> ${stats.numbers}<br>
+                            <strong>Spaces:</strong> ${stats.spaces}
+                        </div>
+                    </div>
+                `;
+
+                textStats.style.display = 'block';
+            }
+
+            function convertCase(type) {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to convert.', 'warning');
+                    return;
+                }
+
+                let result = '';
+                switch (type) {
+                    case 'uppercase':
+                        result = text.toUpperCase();
+                        break;
+                    case 'lowercase':
+                        result = text.toLowerCase();
+                        break;
+                    case 'title':
+                        result = toTitleCase(text);
+                        break;
+                    case 'sentence':
+                        result = toSentenceCase(text);
+                        break;
+                    case 'camel':
+                        result = toCamelCase(text);
+                        break;
+                    case 'pascal':
+                        result = toPascalCase(text);
+                        break;
+                    case 'snake':
+                        result = toSnakeCase(text);
+                        break;
+                    case 'kebab':
+                        result = toKebabCase(text);
+                        break;
+                }
+
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification(`Text converted to ${type} case!`, 'success');
+            }
+
+            function toTitleCase(text) {
+                return text.replace(/\w\S*/g, function(txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                });
+            }
+
+            function toSentenceCase(text) {
+                return text.toLowerCase().replace(/(^\w|\.\s+\w)/g, function(letter) {
+                    return letter.toUpperCase();
+                });
+            }
+
+            function toCamelCase(text) {
+                return text.toLowerCase()
+                    .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase())
+                    .replace(/^[A-Z]/, (m) => m.toLowerCase());
+            }
+
+            function toPascalCase(text) {
+                return text.toLowerCase()
+                    .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase())
+                    .replace(/^[a-z]/, (m) => m.toUpperCase());
+            }
+
+            function toSnakeCase(text) {
+                return text.toLowerCase()
+                    .replace(/[^a-zA-Z0-9]+/g, '_')
+                    .replace(/^_|_$/g, '');
+            }
+
+            function toKebabCase(text) {
+                return text.toLowerCase()
+                    .replace(/[^a-zA-Z0-9]+/g, '-')
+                    .replace(/^-|-$/g, '');
+            }
+
+            function invertCase() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to convert.', 'warning');
+                    return;
+                }
+
+                const result = text.split('').map(char => {
+                    return char === char.toUpperCase() ? char.toLowerCase() : char.toUpperCase();
+                }).join('');
+
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification('Case inverted!', 'success');
+            }
+
+            function alternateCase() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to convert.', 'warning');
+                    return;
+                }
+
+                const result = text.split('').map((char, index) => {
+                    return index % 2 === 0 ? char.toLowerCase() : char.toUpperCase();
+                }).join('');
+
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification('Case alternated!', 'success');
+            }
+
+            function removeSpaces() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to convert.', 'warning');
+                    return;
+                }
+
+                const result = text.replace(/\s+/g, '');
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification('Spaces removed!', 'success');
+            }
+
+            function reverseText() {
+                const text = textInput.value;
+                if (!text.trim()) {
+                    showNotification('Please enter some text to convert.', 'warning');
+                    return;
+                }
+
+                const result = text.split('').reverse().join('');
+                textInput.value = result;
+                updatePreview();
+                updateStats();
+                showNotification('Text reversed!', 'success');
+            }
+
+            function copyText() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('No text to copy.', 'warning');
+                    return;
+                }
+
+                navigator.clipboard.writeText(text).then(() => {
+                    showNotification('Text copied to clipboard!', 'success');
+                }).catch(() => {
+                    showNotification('Failed to copy text.', 'error');
+                });
+            }
+
+            function downloadText() {
+                const text = textInput.value.trim();
+                if (!text) {
+                    showNotification('No text to download.', 'warning');
+                    return;
+                }
+
+                const blob = new Blob([text], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'converted-text.txt';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                showNotification('Text downloaded!', 'success');
+            }
+
+            function clearText() {
+                textInput.value = '';
+                updatePreview();
+                updateStats();
+                showNotification('Text cleared!', 'info');
+            }
+
+            function loadSample() {
+                const sampleText = "Hello World! This is a sample text for case conversion. It includes UPPERCASE, lowercase, and Mixed Case words.";
+                textInput.value = sampleText;
+                updatePreview();
+                updateStats();
+                showNotification('Sample text loaded!', 'info');
+            }
+
+            function showNotification(message, type = 'info') {
+                const notification = document.createElement('div');
+                notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+                notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+                notification.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
